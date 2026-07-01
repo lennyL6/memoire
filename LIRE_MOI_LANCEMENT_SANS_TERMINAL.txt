@@ -1,0 +1,22 @@
+LANCEMENT SANS TERMINAL - FIDUCIAL FPSG INTERACTIVE DEFENSE
+
+OPTION WINDOWS
+1. Dézipper le dossier fiducial-fpsg-interactive-defense.
+2. Double-cliquer sur : LANCER_PRESENTATION_WINDOWS.bat
+3. Attendre l'ouverture automatique de Chrome ou du navigateur par défaut.
+4. Garder la fenêtre serveur ouverte pendant la présentation.
+5. URL locale : http://localhost:5173
+
+OPTION MAC
+1. Dézipper le dossier fiducial-fpsg-interactive-defense.
+2. Double-cliquer sur : LANCER_PRESENTATION_MAC.command
+3. Si macOS bloque le fichier : clic droit > Ouvrir.
+4. Garder la fenêtre ouverte pendant la présentation.
+5. URL locale : http://localhost:5173
+
+IMPORTANT
+- Node.js LTS doit être installé une fois sur l'ordinateur.
+- Le premier lancement peut prendre quelques minutes car npm install s'exécute.
+- Une fois les dépendances installées, les lancements suivants sont rapides.
+- Ne pas double-cliquer sur index.html : l'application React/Vite doit être servie par un serveur local.
+- Le PDF de secours est dans exports/Fiducial_FPSG_Soutenance_Backup.pdf.
