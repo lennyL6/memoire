@@ -45,3 +45,18 @@ A backup placeholder is included at `exports/Fiducial_FPSG_Soutenance_Backup.pdf
 - Keep the PDF backup locally.
 - Avoid depending on internet on presentation day except for the final QR code link.
 - Verify the 2025 baseline, budget, ROI scenario wording and notes before delivery.
+
+## If Chrome shows `ERR_CONNECTION_REFUSED` on `127.0.0.1:5173`
+`127.0.0.1` always means **your own computer**, not the remote agent workspace. If the server is started by an assistant in a sandbox, your local Chrome cannot reach it.
+
+Fastest no-install preview:
+```bash
+cd fiducial-fpsg-interactive-defense
+python3 -m http.server 5173 -d dist
+```
+Then open:
+```text
+http://127.0.0.1:5173/
+```
+
+Alternative without any server: open `fiducial-fpsg-interactive-defense/dist/index.html` directly in Chrome.
