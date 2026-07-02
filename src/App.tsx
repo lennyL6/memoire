@@ -533,9 +533,9 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
   };
 
   return (
-    <div className="presenter-view min-h-screen overflow-auto bg-[#101716] p-6 text-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-[.9fr_1.1fr] gap-5">
-        <section className="rounded-[1.5rem] border border-white/10 bg-white/[.06] p-6 shadow-2xl">
+    <div className="presenter-view h-screen overflow-hidden bg-[#101716] p-6 text-white">
+      <div className="mx-auto grid h-full max-w-[1800px] grid-cols-[420px_minmax(0,1fr)] gap-5">
+        <section className="overflow-y-auto rounded-[1.5rem] border border-white/10 bg-white/[.06] p-6 shadow-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MonitorUp className="text-fiducial-accent" />
@@ -576,12 +576,12 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
           </div>
         </section>
 
-        <section className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-6 shadow-2xl">
+        <section className="flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.08] p-6 shadow-2xl">
           <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral notes</div>
           <h2 className="mt-2 text-3xl font-black tracking-[-0.05em]">{activeSlide.note.title}</h2>
-          <div className="mt-5 grid gap-4">
+          <div className="mt-5 flex min-h-0 flex-1 flex-col gap-4">
             <PresenterBlock label="Recommended timing" text={activeSlide.note.duration} />
-            <div className="rounded-2xl bg-white/[.08] p-4">
+            <div className="flex min-h-0 flex-1 flex-col rounded-2xl bg-white/[.08] p-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <div className="text-xs font-black uppercase tracking-[.16em] text-fiducial-accent">Oral script</div>
@@ -596,7 +596,7 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
                 </button>
               </div>
               <textarea
-                className="mt-4 min-h-[420px] w-full resize-y rounded-2xl border border-white/10 bg-[#0b1110] p-4 text-lg font-semibold leading-relaxed text-white/88 outline-none transition focus:border-fiducial-accent focus:ring-2 focus:ring-fiducial-accent/30"
+                className="mt-4 min-h-0 flex-1 w-full resize-none rounded-2xl border border-white/10 bg-[#0b1110] p-4 text-base font-semibold leading-relaxed text-white/88 outline-none transition focus:border-fiducial-accent focus:ring-2 focus:ring-fiducial-accent/30"
                 value={currentScript}
                 onChange={(event) => saveScript(event.target.value)}
                 spellCheck
