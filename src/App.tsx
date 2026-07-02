@@ -22,6 +22,26 @@ import TopicIllustration, { TopicVariant } from './components/TopicIllustration'
 import { annexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, roiScenarios, segmentation, slides, timingPlan, Slide } from './data/presentationContent';
 import { formatEuro } from './utils/format';
 
+const PRESENTER_SCRIPT_STORAGE_KEY = 'fpsg-presenter-script-overrides';
+
+type PresenterScriptOverrides = Record<string, string>;
+
+const loadPresenterScriptOverrides = (): PresenterScriptOverrides => {
+  try {
+    const stored = localStorage.getItem(PRESENTER_SCRIPT_STORAGE_KEY);
+    if (!stored) return {};
+    const parsed = JSON.parse(stored);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed as PresenterScriptOverrides : {};
+  } catch {
+    return {};
+  }
+};
+
+const isEditableTarget = (target: EventTarget | null) => {
+  if (!(target instanceof HTMLElement)) return false;
+  return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+};
+
 export default function App() {
   const params = new URLSearchParams(window.location.search);
   const printMode = params.get('print') === '1';
@@ -110,6 +130,7 @@ export default function App() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (isEditableTarget(e.target)) return;
       if (presenterMode) {
         if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); sendPresenterCommand('next'); }
         if (e.key === 'ArrowLeft') sendPresenterCommand('prev');
@@ -478,6 +499,7 @@ function Pilot({ slide }: { slide: Slide }) {
 
 function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendCommand }: { activeSlide: Slide; activeIndex: number; activeDeck: Slide[]; inAnnex: boolean; sendCommand: (command: 'next' | 'prev' | 'roadmap' | 'annex') => void }) {
   const [seconds, setSeconds] = useState(0);
+  const [scriptOverrides, setScriptOverrides] = useState<PresenterScriptOverrides>(() => loadPresenterScriptOverrides());
   useEffect(() => {
     const id = window.setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => window.clearInterval(id);
@@ -489,6 +511,27 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
   }, [seconds]);
   const nextSlide = activeDeck[Math.min(activeDeck.length - 1, activeIndex + 1)];
   const progress = ((activeIndex + 1) / activeDeck.length) * 100;
+  const defaultScript = useMemo(() => getPresenterScriptEN(activeSlide), [activeSlide]);
+  const currentScript = scriptOverrides[activeSlide.id] ?? defaultScript;
+  const hasCustomScript = Object.prototype.hasOwnProperty.call(scriptOverrides, activeSlide.id);
+
+  const saveScript = (script: string) => {
+    setScriptOverrides((current) => {
+      const next = { ...current, [activeSlide.id]: script };
+      localStorage.setItem(PRESENTER_SCRIPT_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const resetScript = () => {
+    setScriptOverrides((current) => {
+      const next = { ...current };
+      delete next[activeSlide.id];
+      localStorage.setItem(PRESENTER_SCRIPT_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
   return (
     <div className="presenter-view min-h-screen overflow-auto bg-[#101716] p-6 text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-[.9fr_1.1fr] gap-5">
@@ -538,7 +581,28 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
           <h2 className="mt-2 text-3xl font-black tracking-[-0.05em]">{activeSlide.note.title}</h2>
           <div className="mt-5 grid gap-4">
             <PresenterBlock label="Recommended timing" text={activeSlide.note.duration} />
-            <PresenterBlock label="Oral script" text={getPresenterScriptEN(activeSlide)} large />
+            <div className="rounded-2xl bg-white/[.08] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs font-black uppercase tracking-[.16em] text-fiducial-accent">Oral script</div>
+                  <div className="mt-1 text-xs font-semibold text-white/50">Saved automatically in this browser for this slide.</div>
+                </div>
+                <button
+                  className="rounded-xl bg-white/10 px-3 py-2 text-xs font-black text-white/78 hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={!hasCustomScript}
+                  onClick={resetScript}
+                >
+                  Reset
+                </button>
+              </div>
+              <textarea
+                className="mt-4 min-h-[420px] w-full resize-y rounded-2xl border border-white/10 bg-[#0b1110] p-4 text-lg font-semibold leading-relaxed text-white/88 outline-none transition focus:border-fiducial-accent focus:ring-2 focus:ring-fiducial-accent/30"
+                value={currentScript}
+                onChange={(event) => saveScript(event.target.value)}
+                spellCheck
+                aria-label="Editable oral script"
+              />
+            </div>
           </div>
         </section>
       </div>
