@@ -32,6 +32,7 @@ body {
   width: 1600px;
   min-width: 1600px;
   max-width: 1600px;
+  color: var(--anthracite);
   border-radius: 1rem;
   box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
 }
