@@ -361,32 +361,140 @@ export const annexes: Slide[] = [
   }
 ];
 
+const lines = (...items: string[]) => items.map((item) => `- ${item}`).join('\n\n');
+
+export const presenterScriptVersion = 'jury-script-2026-07-06-v2';
+
 export const presenterScriptsEN: Record<string, string> = {
-  opening: `Good morning. My defense focuses on a concrete business issue for Fiducial FPSG: how to enhance and commercialize high-value training offers such as customized e-learning, augmented reality and virtual reality. The point is not to present innovation as a nice extra feature, but to show how existing offers can become structured, measurable and profitable commercial growth drivers. I will therefore approach the subject as a consulting mission: first the issue, then the diagnosis, then recommendations, budget, ROI logic and final decision.`,
-  roadmap: `I will follow a clear consulting sequence. I start with the business issue and the exact problem statement, then explain the methodology used to avoid a purely theoretical answer. After that, I move into the internal and external diagnosis of the three offers, the benchmark, and the strategic synthesis. The second half is operational: recommendations, pilot campaign, KPI dashboard, budget, ROI scenarios and final recommendation.`,
-  'core-issue': `The central finding is simple: Fiducial FPSG does not lack innovation. The company already has credible high-value offers. The real challenge is commercial scalability. These offers are not yet supported by a fully structured commercial system: sales appropriation is uneven, positioning can be unclear, tools are limited, and performance is not monitored with dedicated indicators. So the issue is less about inventing new solutions and more about turning existing innovation into repeatable sales execution.`,
-  'problem-statement': `The dissertation problem statement is: how can Fiducial FPSG enhance and commercialize its high-value training offers, namely e-learning, augmented reality and virtual reality for professional clients, considering their commercial development potential? This question has three dimensions. It is strategic because these offers can differentiate Fiducial FPSG. It is commercial because sales teams need clear arguments, targets and proof. It is operational because the answer must include actions, budget, KPIs and realistic implementation.`,
-  methodology: `The methodology combines several sources of evidence. I used a literature review to frame digital learning, immersive training, value-based selling and adoption barriers. I also analyzed internal diagnosis elements, existing commercial offers and proposals, including concrete e-learning proposals. Finally, I used a benchmark with complementary perspectives. This mixed approach makes the recommendations more robust because they are not based only on opinion, but on a crossing of theory, field observations and commercial documents.`,
-  'benchmark-logic': `The benchmark was designed to answer one question: how does an innovative training offer become commercially sellable? I did not only compare competitors. I combined four perspectives: a direct competitor perspective, a pedagogical innovation perspective, a key account client perspective and a B2B sales strategy perspective. This helps identify what Fiducial FPSG needs to strengthen: perceived value, proof, demonstrations, sales tools and a clearer link between technology and operational client benefits.`,
-  'offers-snapshot': `The three offers should not be managed as one generic innovation category. Customized e-learning has strong key account potential, especially for large or multi-site clients, but it requires consultative selling. Augmented reality is the most mature short-term commercial lever because it upgrades familiar safety training needs. Virtual reality is pedagogically relevant, especially for road risk prevention, but commercially underactivated and exposed to a gadget perception if the positioning is not precise.`,
-  'elearning-diagnosis': `Customized e-learning is a high-value offer because it can transform client-specific training needs into reusable digital assets. The analyzed proposals show this potential: Decathlon at 4,500 euros excluding tax, Paris La Defense at 5,720 euros, and IBM at 13,560 euros. However, the offer is harder to scale internally because it requires needs analysis, customization, technical understanding and a value-based sales discussion. This is why it cannot rely only on a few experienced salespeople.`,
-  'ar-diagnosis': `Augmented reality appears as the most accessible short-term lever. It is linked to a familiar client need, especially fire safety awareness, so the sales discussion starts from something clients already understand. The solution is visual, easy to demonstrate and suitable for upselling within the existing portfolio. The main issue is not the relevance of AR, but the need for stronger commercial structuring: clear materials, dedicated objectives, systematic demonstrations and specific monitoring.`,
-  'vr-diagnosis': `Virtual reality is relevant from a learning perspective, especially for professional road risk prevention. It can target companies with fleets, logistics activities, field teams or mobile employees. But the commercial challenge is stronger than for AR: if Fiducial FPSG sells VR as an immersive experience, the client may see it as a gadget. The positioning must therefore shift toward prevention of professional road risk, behavior awareness and realistic simulation, with selective targeting rather than broad promotion.`,
-  'internal-diagnosis': `The internal diagnosis reveals a useful paradox. Fiducial FPSG has real strengths: credibility in safety and prevention, an existing B2B client base, innovative offers and the ability to design customized e-learning. But the commercial operating system remains incomplete. There are no sufficiently dedicated objectives, sales knowledge is uneven, sales materials are limited, internal training is insufficient and there is no specific KPI dashboard. The assets exist, but the system to scale them is still underdeveloped.`,
-  'external-diagnosis': `The external environment is favorable but not automatic. Clients increasingly look for flexible, scalable and engaging training formats, and this creates opportunities for digital and immersive solutions. At the same time, several barriers remain: price sensitivity, resistance to change, attachment to face-to-face training, difficulty proving short-term ROI and the risk that AR or VR is perceived as a gadget. This means Fiducial FPSG must not only create interest; it must provide proof and reduce adoption risk.`,
-  'benchmark-synthesis': `The benchmark leads to one major lesson: clients do not buy technology itself. They buy operational value, reliability, simplicity and proof. For Fiducial FPSG, this means the offers must be translated into client benefits: compliance, prevention, learner engagement, traceability, time savings or risk reduction. The benchmark also supports the need for demonstrations, pilot phases, clear sales materials and sales enablement. Innovation becomes valuable only when the client understands how it solves a concrete problem.`,
-  'strategic-synthesis': `The strategic synthesis can be summarized as a chain. First, Fiducial FPSG needs a clear value proposition for each offer. Then salespeople must appropriate that value through training and tools. Once the sales force can explain and demonstrate the offers, clients can understand them more easily, adoption barriers decrease and commercial performance can improve. This is not a purely theoretical model: each step corresponds to an action in the recommendations.`,
-  segmentation: `Segmentation is essential because relevance depends on matching each offer with the right client situation. E-learning should primarily target large accounts, multi-site organizations and clients with specific internal processes that justify customization and reuse. Augmented reality should target existing fire safety clients, SMEs and recurring B2B clients because the upsell logic is immediate. Virtual reality should be more selective, focusing on vehicle fleets, logistics, field teams and mobile employees exposed to road risk.`,
-  positioning: `The recommended positioning is deliberately clear: Fiducial FPSG should not try to become a technology provider. Its credibility comes from safety training, prevention and regulatory expertise. Digital and immersive formats should be presented as levers that strengthen this expertise, not as the core identity. This positioning reduces the gadget risk and keeps the commercial message anchored in client outcomes such as prevention, compliance, engagement and operational risk management.`,
-  'action-overview': `The action plan is built around four recommendations, each solving a specific weakness identified in the diagnosis. First, create a clear commercial offer portfolio. Second, train salespeople in value-based selling. Third, launch a 40-client pilot campaign. Fourth, implement a dedicated KPI dashboard with monthly monitoring. The logic is progressive: clarify, enable, test, measure and then scale. This keeps the plan realistic while making the commercial development measurable.`,
-  'rec-portfolio': `The first recommendation is to create a clear commercial offer portfolio. Each offer should have a concise sales sheet covering target clients, the client problem solved, key benefits, price logic, use cases, objections and proof elements. This is not enough by itself, but it is the foundation for repeatable execution. Without standardized materials, the commercial message depends too much on individual knowledge and becomes difficult to scale across the sales force.`,
-  'rec-training': `The second recommendation is to train a first group of four salespeople during a one-day session. The goal is not simply to explain the offers, but to make them commercially usable. The training should include value-based selling, demonstrations, objection handling, a discovery questionnaire and role plays. This matters because high-value offers require a consultative conversation. Salespeople need to identify the right client pain, connect it to the right offer and defend the value beyond the technology itself.`,
-  'rec-pilot': `The third recommendation is to launch a 40-client pilot campaign. The campaign should start with the existing portfolio because these clients already know Fiducial FPSG and can be easier to approach. Each client should be segmented by offer relevance: e-learning for large or multi-site needs, AR for familiar fire safety upsell, and VR for road risk exposure. The objective is not only to sell. It is also to collect objections, refusal reasons, demonstration feedback and early conversion signals before scaling wider.`,
-  'rec-kpi': `The fourth recommendation is to install a dedicated KPI dashboard. This is important because without measurement, innovative offers remain isolated opportunities rather than a managed commercial priority. The dashboard should track offers presented, demonstrations, quotes issued, quote value, conversion rate, signed revenue, gross margin, average deal value, client satisfaction and refusal reasons. These are recommended indicators, not existing results. Their role is to make sales activation visible and manageable month after month.`,
-  'budget-baseline': `The action budget is now presented as one clear figure: 9,396 euros. It includes 8,300 euros of direct costs for the commercial offer portfolio, sales training, the targeted pilot campaign and the KPI dashboard. It also includes internal time valuation: 89 estimated internal hours at 12.31 euros per hour, rounded to 1,096 euros. This makes the financial analysis more complete and more professional because it values the real effort required to execute the plan.`,
-  'roi-break-even': `The ROI calculation uses the total action budget of 9,396 euros and a gross margin rate of 35 percent. The important point is that ROI is calculated on additional margin, not on additional revenue. The conservative scenario at plus 5 percent generates 7,043 euros of additional margin and remains negative. The realistic scenario at plus 10 percent generates 14,087 euros of additional margin and reaches a positive ROI of plus 49.9 percent. The ambitious scenario at plus 20 percent shows the scalability potential, with 28,174 euros of additional margin and plus 199.9 percent ROI.`,
-  'risks-final': `To conclude, Fiducial FPSG already has the offers, the credibility and the client base. The recommendation is therefore not to create another innovation, but to structure the go-to-market approach around a clear sequence: segment, equip, pilot, measure and scale. The action plan is realistic because it starts from existing offers. It is measurable because it includes monthly KPIs. And it is financially defensible because the realistic scenario already generates a positive ROI with internal time included.`,
-  'thank-you': `Thank you for listening. I am ready to answer your questions.`,
+  opening: lines(
+    'Bonjour à toutes et à tous, je vais vous présenter une mission de conseil portant sur le développement commercial des offres à forte valeur ajoutée de Fiducial FPSG.',
+    'Le sujet ne consiste pas à présenter un catalogue, mais à comprendre comment transformer trois offres existantes — e-learning, réalité augmentée et réalité virtuelle — en leviers de croissance structurés.',
+    'La logique de la présentation sera celle d’un consultant externe : diagnostic, benchmark, recommandations, budget, ROI, puis décision finale.'
+  ),
+  roadmap: lines(
+    'La présentation suit une logique progressive, depuis l’identification du problème business jusqu’à la recommandation finale.',
+    'La première partie sert à comprendre la situation : problématique, méthodologie, diagnostic et benchmark.',
+    'La seconde partie est orientée décision : synthèse stratégique, plan d’action, budget, ROI et recommandation finale pour Fiducial FPSG.'
+  ),
+  'core-issue': lines(
+    'The starting point of the diagnosis is that Fiducial FPSG already has high-value training offers; the issue is not product creation.',
+    'The main gap is between offer availability and commercial scalability: the offers exist, but they are not yet systematically positioned, sold and monitored.',
+    'The strategic bridge on the slide shows the logic of the mission: clear value proposition, sales appropriation, client understanding, adoption and performance.'
+  ),
+  'problem-statement': lines(
+    'The problem statement focuses on how Fiducial FPSG can enhance and commercialize its high-value offers for professional clients.',
+    'The question is strategic because these offers must reinforce Fiducial FPSG’s positioning in safety training and risk prevention.',
+    'The question is also commercial and operational because the offers must be better targeted, easier to sell and supported by measurable actions.'
+  ),
+  methodology: lines(
+    'The methodology was designed to avoid a purely theoretical answer and to build recommendations from several sources of evidence.',
+    'The analysis combines literature review, internal diagnosis, existing commercial proposals, benchmark, strategic synthesis and operational recommendations.',
+    'This mixed approach makes the recommendation more credible because it connects theory, field observation, real business cases and external comparison.'
+  ),
+  'benchmark-logic': lines(
+    'The benchmark was structured around four perspectives because the issue is not only competitive, but also pedagogical, client-oriented and commercial.',
+    'Apave Formation brings the direct competitor view, École Rockefeller Lyon the pedagogical innovation view, OCP Répartition the key account client view, and Axe Capital Lyon the B2B sales strategy view.',
+    'The benchmark criteria are practical: perceived value, adoption barriers, target clients, sales tools and concrete lessons for Fiducial FPSG.'
+  ),
+  'offers-snapshot': lines(
+    'The diagnosis starts with one key observation: the three offers do not have the same commercial maturity.',
+    'Customized e-learning has high-value potential but remains too dependent on senior sales profiles.',
+    'Augmented reality is the most accessible offer commercially, while virtual reality is pedagogically relevant but still commercially underactivated.'
+  ),
+  'elearning-diagnosis': lines(
+    'Customized e-learning should be presented as a custom project that becomes a reusable training asset, not as a simple online course.',
+    'The process on the left is important because it shows the client buys a tailored solution: client process, tailored content, SCORM delivery and reuse.',
+    'The three commercial examples confirm the value level: Decathlon at €4,500, Paris La Défense at €5,720 and IBM at €13,560, excluding tax.',
+    'The main limit is internal scalability: this offer is valuable, but it needs stronger sales tools to become easier to detect, explain and sell beyond senior profiles.'
+  ),
+  'ar-diagnosis': lines(
+    'Augmented reality is the most mature short-term lever because it improves a training need that clients already understand: fire safety.',
+    'The commercial strength of this offer is that the value can be demonstrated through visual, practical and realistic scenarios.',
+    'The offer has strong upsell potential with existing fire safety clients, but it still needs stronger structuring and dedicated monitoring to scale properly.'
+  ),
+  'vr-diagnosis': lines(
+    'Virtual reality is relevant because it addresses road risk as a professional risk for mobile employees, field teams, logistics or vehicle fleets.',
+    'The value of immersion only exists if it proves prevention value through realistic scenarios and safer learning conditions.',
+    'The commercial risk is gadget perception, which means the offer must be positioned as professional road risk prevention, not as a VR experience.'
+  ),
+  'internal-diagnosis': lines(
+    'The internal diagnosis shows a clear contrast: the assets are real, but the commercial system is incomplete.',
+    'Fiducial FPSG already has innovative offers, safety credibility, an existing B2B client base, e-learning design capability and positive learner feedback for augmented reality.',
+    'The weaknesses are mainly execution-related: no dedicated commercial objectives, uneven sales knowledge, insufficient training, limited sales materials and no specific KPI dashboard.'
+  ),
+  'external-diagnosis': lines(
+    'The external diagnosis shows that demand is evolving, especially toward flexible, scalable and more engaging training formats.',
+    'This creates opportunities for Fiducial FPSG: modernization of safety training, upselling among existing clients and differentiation from traditional providers.',
+    'However, adoption is not automatic because clients may remain price-sensitive, attached to face-to-face training or skeptical toward AR and VR.'
+  ),
+  'benchmark-synthesis': lines(
+    'The benchmark confirms that innovation must become perceived value before it can become commercial performance.',
+    'Apave shows that the offer must be sold as an operational solution; Rockefeller shows that innovation must remain pedagogically credible.',
+    'OCP shows that key accounts need reliability, proof and simplicity before broader deployment.',
+    'Axe Capital confirms that high-value B2B offers require value-based selling, sales enablement and dedicated KPIs.'
+  ),
+  'strategic-synthesis': lines(
+    'The strategic shift is from innovation availability to commercial scalability.',
+    'The sequence is clear: value proposition first, then sales force appropriation, then client understanding, adoption and commercial performance.',
+    'This slide connects the diagnosis to the action plan because it shows that performance depends on a structured commercial system, not only on the quality of the offers.'
+  ),
+  segmentation: lines(
+    'The segmentation principle is simple: Fiducial FPSG should not sell everything to everyone.',
+    'E-learning should target large accounts, multi-site clients and companies with specific internal processes because the value is customization, standardization and scalability.',
+    'Augmented reality should target existing fire safety clients, SMEs and recurring B2B clients, while virtual reality should focus on vehicle fleets, logistics, field teams and mobile employees.',
+    'Good segmentation reduces price resistance because each offer is connected to a real operational problem.'
+  ),
+  positioning: lines(
+    'The recommended positioning is that Fiducial FPSG should remain a safety training expert using digital and immersive levers.',
+    'The company should not become a technology provider because its credibility comes from safety, compliance, prevention and training expertise.',
+    'The decision view is important: evidence must lead to recommendation, recommendation must lead to action, and action must be controlled through KPIs.'
+  ),
+  'action-overview': lines(
+    'The action plan is built around four actions that structure commercial scalability.',
+    'The first two actions prepare the system: clarify the commercial offer portfolio and train salespeople.',
+    'The last two actions test and control the system: launch a 40-client pilot campaign and install a dedicated KPI dashboard.'
+  ),
+  'rec-portfolio': lines(
+    'The first recommendation is to create a clear commercial offer portfolio because the sales message is not yet standardized enough.',
+    'One sales sheet per offer would give salespeople a common commercial language and make the offers easier to activate.',
+    'Each sheet should clarify the target clients, the problem solved, the benefits, the price logic, the use cases, the objections and the proof elements.'
+  ),
+  'rec-training': lines(
+    'The second recommendation is to train salespeople in value-based selling, starting with a realistic first group of four salespeople.',
+    'The training should combine offer appropriation, demonstrations, objection handling and a discovery questionnaire.',
+    'The purpose is to move salespeople from product description to value explanation, so they can defend the offers confidently in front of clients.'
+  ),
+  'rec-pilot': lines(
+    'The third recommendation is to launch a 40-client pilot campaign before scaling the approach more broadly.',
+    'The campaign sequence is simple: select the clients, segment them by offer relevance, contact them, follow up, propose demonstrations and learn from refusal reasons.',
+    'The six-month execution timeline makes the plan operational: clarify in month one, train in month two, launch in month three, demonstrate and analyze in months four and five, then scale in month six.'
+  ),
+  'rec-kpi': lines(
+    'The fourth recommendation is to install a dedicated KPI dashboard to move from isolated opportunities to a managed commercial priority.',
+    'These KPIs are recommended management indicators, not existing results, which is important to avoid any confusion.',
+    'The dashboard should track both activation and performance: offers presented, demonstrations, quotes, quote value, conversion, revenue, margin, satisfaction and refusal reasons.'
+  ),
+  'budget-baseline': lines(
+    'The action plan represents a controlled investment, with €8,300 in direct costs and a total budget of €9,396 when internal time is included.',
+    'Internal time is included because the plan requires sales training, preparation, follow-up, coordination and monthly monitoring.',
+    'Compared with the 2025 signed revenue baseline of €402,479 for AR, e-learning and VR, this budget remains proportionate for a commercial structuring project.'
+  ),
+  'roi-break-even': lines(
+    'The ROI calculation uses a 35% margin assumption to move from additional revenue to additional margin.',
+    'The conservative scenario remains negative, but the realistic scenario at +10% additional revenue generates a positive ROI of +49.9%.',
+    'The ambitious scenario reaches a much higher ROI, but the key point is that the plan becomes profitable in the realistic scenario, not only in an extreme growth case.',
+    'This makes the action plan financially defendable, while still requiring internal validation of the real margin assumption.'
+  ),
+  'risks-final': lines(
+    'La recommandation finale consiste à structurer, activer et faire monter en puissance les offres existantes, plutôt qu’à chercher à créer davantage d’innovation.',
+    'Fiducial FPSG possède déjà les offres, la crédibilité et la base client ; la priorité est maintenant de les transformer en leviers de croissance structurés, mesurables et rentables.',
+    'Le chemin de décision est progressif : segmenter les bons clients, équiper la force commerciale, tester l’approche, mesurer les résultats, puis déployer après validation.',
+    'Les conditions de réussite sont l’appropriation par l’équipe commerciale, la sélection ciblée des clients et le suivi mensuel des KPI.'
+  ),
+  'thank-you': lines(
+    'Merci pour votre écoute.',
+    'Je suis prêt à répondre à vos questions.'
+  ),
   'a1-budget': `This annex supports the budget discussion. The total action budget is 9,396 euros. It includes 8,300 euros of direct costs and 1,096 euros of internal time valuation. The direct costs cover the commercial offer portfolio, sales training, the pilot campaign and the KPI dashboard. The internal time is based on 89 estimated hours valued at 12.31 euros per hour.`,
   'a2-roi': `This annex supports the ROI calculation. The formula is clear: additional margin equals additional signed revenue multiplied by 35 percent. ROI equals additional margin minus 9,396 euros, divided by 9,396 euros. At plus 10 percent additional signed revenue, the plan generates 14,087 euros of additional margin and becomes financially profitable with a plus 49.9 percent ROI.`,
   'a3-kpi-template': `This annex shows the recommended dashboard logic. I would use it to explain that the KPIs measure activation before final sales performance. At the beginning, offers presented, demonstrations and quotes issued are especially important because they reveal whether the sales force is actually using the offer portfolio. Refusal reasons are also strategic because they help adjust the pitch and targeting.`,
@@ -397,107 +505,7 @@ export const presenterScriptsEN: Record<string, string> = {
   'a8-static-summary': `This annex provides a one-minute backup summary. The mission shows that Fiducial FPSG already has innovative offers, but needs a stronger commercial system to scale them. The proposed path is to clarify the offer portfolio, train a first sales group, test with 40 targeted clients, monitor dedicated KPIs, and scale progressively based on evidence.`
 };
 
-const presenterScriptDetailsEN: Record<string, string> = {
-  opening: `I can say this in a calm but assertive way: the subject may look technological at first, because it mentions e-learning, augmented reality and virtual reality, but my real angle is commercial development. I am not trying to prove that these technologies are modern or attractive. I am trying to show how Fiducial FPSG can turn them into offers that salespeople understand, clients value, and managers can monitor.
-
-I should briefly position myself as someone who worked from the company context and from a consulting logic. The mission is about moving from existing innovation to a commercial system. So I can introduce the red thread immediately: diagnose the current maturity of the offers, identify adoption and sales barriers, compare with external practices, then recommend a realistic plan. The sentence to keep in mind is: the next growth lever is not more technology, it is disciplined commercialization of offers that already exist.`,
-  roadmap: `Here, I should reassure the jury about the structure. I can explain that the presentation follows the same logic as the dissertation, but compressed for an oral defense. First, I will define the business issue and the exact problem statement. Then I will explain the methodology, because the recommendations need to be grounded in evidence rather than intuition.
-
-After that, I move into the diagnosis: first by offer, then internally and externally. The benchmark then helps me avoid looking only at Fiducial FPSG from the inside. Finally, the last part is where the defense becomes operational: four recommendations, a pilot campaign, KPIs, budget, ROI scenarios and final recommendation. I should make clear that the order matters: I do not jump directly to ROI before proving that the commercial system needs to be structured.`,
-  'core-issue': `This is one of the most important slides. I should not speak too fast. The central idea is that Fiducial FPSG already has the ingredients: a safety training expertise, a B2B client base, and existing high-value offers. So the issue is not a lack of innovation. The issue is that these offers are not yet industrialized commercially.
-
-I can detail what "commercial scalability" means in this case. It means that the sales force should know when to present the offer, to whom, with which argument, with which proof, and how to follow the opportunity. Today, the development remains too dependent on individual knowledge, isolated opportunities and uneven appropriation. That creates a gap between the potential of the offers and their actual commercial activation. This slide sets up the whole defense: the mission is to build a repeatable commercial logic.`,
-  'problem-statement': `I should read or paraphrase the problem statement clearly, because it is the academic anchor of the defense. The question is how Fiducial FPSG can enhance and commercialize its high-value training offers, namely e-learning, augmented reality and virtual reality, for professional clients, while considering their commercial development potential.
-
-Then I can unpack the three dimensions. Strategically, these offers can help Fiducial FPSG differentiate itself in a market where traditional safety training can be perceived as standardized. Commercially, differentiation is not enough: salespeople need a clear portfolio, arguments, target segments and proof. Operationally, the answer must be feasible: a budget, a pilot, KPIs and risk control. I should emphasize that the dissertation is not just about analyzing technologies. It is about connecting strategy, sales execution and measurable implementation.`,
-  methodology: `On this slide, I should show rigor. I can explain that I deliberately avoided a purely theoretical answer. The literature review helped frame the key concepts: digital learning, immersive learning, adoption barriers, value-based selling, and the need to prove value to B2B clients. But the field dimension was equally important, because the offers already exist inside Fiducial FPSG.
-
-I can mention that I analyzed internal diagnosis elements, existing offers and concrete commercial proposals, especially for customized e-learning. Then I used a benchmark to compare several perspectives, not only competitors. This matters because recommendations are stronger when several sources converge. The transition sentence is: once the method is clear, I can now move from the research approach to the actual diagnosis of the three offers.`,
-  'benchmark-logic': `The point here is to explain why the benchmark is not random. I can say: I did not choose actors only because they are similar to Fiducial FPSG. I chose them because each one brings a useful perspective on the same commercial question: how does an innovative training offer become credible and sellable?
-
-The direct competitor angle helps understand how safety and compliance offers are packaged. The pedagogical innovation angle shows that technology must remain connected to learning objectives. The key account client angle shows that large clients need reliability, proof and simplicity before adopting. The B2B sales strategy angle highlights sales enablement and value-based selling. This benchmark therefore supports the recommendations: clarify value, prove usefulness, train salespeople, use pilots and monitor performance.`,
-  'offers-snapshot': `This slide is the entry point of the diagnosis. I should make clear that e-learning, AR and VR cannot be managed with the same generic message. They have different targets, different maturity levels and different sales barriers. If Fiducial FPSG sells them all under the label "innovation", the commercial message becomes too vague.
-
-E-learning is high value because it can be customized and reused, especially for large accounts and multi-site clients. AR is the easiest short-term lever because it improves a familiar fire safety need and is easy to demonstrate. VR is pedagogically interesting, especially for road risk prevention, but commercially more fragile because it can be perceived as a gadget. The key idea is segmentation by offer maturity.`,
-  'elearning-diagnosis': `For e-learning, I should insist on the difference between a cheap online module and a customized training asset. Fiducial FPSG's customized e-learning can respond to specific client processes, standardize training across sites, and create long-term reuse. This explains why the offer can create value for large accounts.
-
-I should cite the examples carefully: Decathlon at 4,500 euros excluding tax, Paris La Defense at 5,720 euros, and IBM at 13,560 euros. These figures do not prove the whole market size, but they prove that meaningful revenue is possible when the offer is correctly positioned. The limit is scalability: customized e-learning requires discovery, scoping, technical explanation and value justification. So the recommendation will be to make the offer easier to explain and easier to sell beyond only senior commercial profiles.`,
-  'ar-diagnosis': `For augmented reality, I can take a more positive tone because it is the most mature short-term lever. The reason is simple: AR is connected to an existing client need, especially fire safety awareness. The client does not need to be convinced that fire safety matters. The commercial job is to show that AR makes the training more engaging, concrete and memorable.
-
-I should explain that AR is also easier to demonstrate than e-learning customization or VR road risk prevention. A good demonstration can reduce uncertainty quickly. It also fits an upsell logic inside the existing client portfolio. But I must avoid saying that everything is already solved. The offer still needs clearer sales materials, dedicated objectives and specific tracking. The diagnosis is therefore: strong commercial accessibility, but insufficient structuring.`,
-  'vr-diagnosis': `For virtual reality, I should be balanced. I should not dismiss it, but I should not oversell it either. Pedagogically, VR can be relevant because it creates a realistic simulation environment, especially for road risk prevention. This can speak to companies with fleets, logistics operations, field employees or mobile staff.
-
-The commercial risk is the perception of VR as a gadget. If the sales pitch starts with the headset or the immersive experience, the client may focus on novelty and cost. The pitch should start from the professional risk: road accidents, prevention, employee behavior, awareness and safety culture. Then VR becomes a means, not the subject. This slide prepares the positioning recommendation: Fiducial FPSG should sell prevention outcomes, not immersive technology for its own sake.`,
-  'internal-diagnosis': `This slide is important because it shows that the company is not starting from weakness. Fiducial FPSG has strong internal assets: expertise in safety and prevention, legitimacy with professional clients, an existing B2B portfolio, and the capacity to design customized or immersive formats. These are real foundations.
-
-But the internal weaknesses explain why the offers do not scale naturally. There are no sufficiently dedicated commercial objectives, sales knowledge is uneven, materials are limited, internal training is not strong enough, communication is not structured enough, and there is no KPI dashboard dedicated to these offers. I should phrase the diagnosis clearly: the company has the ingredients, but not yet the complete commercial operating system. That is exactly what the action plan will address.`,
-  'external-diagnosis': `Here, I should show that the market context creates both opportunity and resistance. On the opportunity side, professional clients increasingly need flexible, scalable, traceable and engaging training formats. Digital and immersive formats can answer these needs, especially when they reduce logistical constraints or improve learner engagement.
-
-But adoption is not automatic. Clients may be price-sensitive, attached to face-to-face training, or skeptical about digital and immersive tools. They may also ask for proof of ROI, which is difficult to provide immediately. This means Fiducial FPSG must reduce perceived risk through demonstration, pilot phases and clear value arguments. The transition is: because the external environment is mixed, the company needs a commercial approach based on proof, not only on innovation.`,
-  'benchmark-synthesis': `On this slide, I should translate the benchmark into one clear lesson: clients do not buy innovation as an abstract promise. They buy operational value. In the context of Fiducial FPSG, operational value means better prevention, compliance, learner engagement, traceability, time savings, standardization or risk reduction.
-
-I can explain that the benchmark confirms several choices. First, sales materials should focus on client problems and benefits. Second, demonstrations and pilots are necessary because they make the offer tangible. Third, salespeople need to be trained in value-based selling, because high-value offers are harder to sell than standard training sessions. Fourth, dedicated KPIs are required to know whether the offers are actually being activated. This slide is the bridge from diagnosis to strategy.`,
-  'strategic-synthesis': `This slide summarizes the strategic logic. I can walk through the chain step by step. First, Fiducial FPSG clarifies the value proposition: what problem does each offer solve, for which client, and with which proof? Second, salespeople appropriate the offer through training, scripts and demonstrations. Third, clients understand the offer because the pitch is clearer and more concrete.
-
-Once the client understands the value, adoption barriers decrease. That can lead to more demonstrations, more quotes, better conversion and better commercial performance. I should acknowledge that the model is simplified, but useful because every step can be translated into an action. The message is: commercial performance starts before the client meeting, with the way the offer is packaged and enabled internally.`,
-  segmentation: `Segmentation is where the strategy becomes practical. I should say clearly that Fiducial FPSG should not sell everything to everyone. If the same message is used for all clients, the perceived relevance will be weak. Each offer needs a target logic.
-
-For e-learning, the priority should be large accounts, multi-site organizations and clients with specific internal procedures, because the value comes from customization and reuse. For AR, the priority should be existing fire safety clients, SMEs and recurring clients, because the need is familiar and the upsell is natural. For VR, the targeting must be more selective: vehicle fleets, logistics, field teams and mobile employees exposed to road risk. This segmentation reduces wasted commercial effort and strengthens the pitch.`,
-  positioning: `This slide is a strategic safeguard. I should explain that Fiducial FPSG should not reposition itself as a technology provider. That would be risky because it would move the company away from its main legitimacy: safety training, prevention and regulatory expertise.
-
-The recommended positioning is stronger: Fiducial FPSG remains a safety training expert that uses digital and immersive levers when they improve prevention, compliance and learner engagement. This wording keeps the technology in the right place. It is a means to create value, not the value itself. I can connect this to VR specifically: if the company sells a headset, it risks gadget perception; if it sells professional road risk prevention, VR becomes credible.`,
-  'action-overview': `This is the transition into recommendations. I should say that the action plan is deliberately limited to four actions because execution is the priority. A very broad plan would look ambitious but would be difficult to implement and monitor.
-
-The first action is to create a clear commercial offer portfolio. The second is to train salespeople in value-based selling. The third is to launch a 40-client pilot campaign. The fourth is to install a dedicated KPI dashboard with monthly monitoring. The logic is sequential: clarify the offer, enable the sales force, test on a controlled perimeter, measure the results, then scale. This gives Fiducial FPSG a realistic path rather than a theoretical recommendation.`,
-  'rec-portfolio': `For recommendation one, I should present the offer portfolio as the foundation of the whole plan. The objective is to make the offers easier to understand and easier to sell. Each offer should have a concise sales sheet with the target client, the client problem solved, the key benefits, pricing logic, use cases, common objections and proof elements.
-
-I can explain why this matters operationally. If a salesperson has to reconstruct the argument from memory every time, the offer will not scale. A good sales sheet standardizes the commercial message without making it rigid. It also prepares the training session and the pilot campaign. I should be clear: a sales sheet alone does not sell the offer, but without it the following actions become weaker.`,
-  'rec-training': `For recommendation two, I should insist that training is not a product presentation. The salespeople do not only need to know that e-learning, AR and VR exist. They need to know when to propose them, how to qualify the client need, how to demonstrate value, and how to answer objections.
-
-The proposed format is a first group of four salespeople during one day. This is realistic and limited, which makes it easier to test before expanding. The session should include value-based selling, demonstrations, objection handling, a discovery questionnaire and role plays. I can use the formula on the slide to explain that internal cost should be calculated with loaded hourly costs, but the main point is capability building. Salespeople cannot scale offers they do not fully understand.`,
-  'rec-pilot': `For recommendation three, I should explain the pilot logic carefully. The goal is not to immediately launch a large commercial campaign. The goal is to test the pitch, the targeting and the sales process on a controlled sample of 40 priority clients.
-
-I should specify that the existing portfolio comes first because these clients already know Fiducial FPSG, which lowers the access barrier. Each client should be matched with the most relevant offer: e-learning for complex or multi-site needs, AR for familiar safety training upsell, and VR for road risk exposure. The pilot should include targeted email, phone follow-up, demonstrations or pilot sessions, quotes, client feedback and refusal reasons. The key sentence is: the pilot reduces commercial risk before scaling.`,
-  'rec-kpi': `For recommendation four, I should make clear that KPIs are not administrative decoration. They are the mechanism that transforms isolated opportunities into a managed commercial priority. Without a dashboard, Fiducial FPSG may know that some offers exist, but not whether they are actually presented, demonstrated, quoted and converted.
-
-The dashboard should track offers presented, demonstrations, quotes issued, quote value, conversion rate, signed revenue, gross margin, average deal value, satisfaction and refusal reasons. I must say that these are recommended KPIs, not existing results. At the beginning, the most useful indicators are activation indicators: offers presented, demos and quotes. Later, the company can focus more on conversion, margin and scaling decisions.`,
-  'budget-baseline': `On the budget slide, I should be precise and affirmative. I have retained one clear action budget: 9,396 euros. It includes 8,300 euros of direct costs and 1,096 euros of internal time valuation. The internal time corresponds to 89 estimated hours valued at 12.31 euros gross per hour.
-
-I should explain that this is a prudent budget because it does not finance the creation of a new innovation. It finances commercial structuring: offer portfolio, sales training, targeted pilot campaign and KPI dashboard. By including internal time, the analysis becomes more complete and more professional. The key sentence is simple: the total action budget is 9,396 euros, including direct costs and internal time.`,
-  'roi-break-even': `For ROI, I should be clear that the gross margin used for the calculation is 35 percent. The ROI is calculated on additional margin, not on signed revenue. The formula is: additional margin equals additional signed revenue multiplied by 35 percent, and ROI equals additional margin minus 9,396 euros, divided by 9,396 euros.
-
-Then I can walk through the three scenarios. The conservative scenario at plus 5 percent produces 20,124 euros of additional revenue, 7,043 euros of additional margin, and a negative ROI of -25 percent. It is therefore insufficient. The realistic scenario at plus 10 percent produces 40,248 euros of additional revenue, 14,087 euros of additional margin, and a positive ROI of +49.9 percent. This is the scenario that makes the action plan financially profitable. The ambitious scenario at plus 20 percent produces 80,496 euros of additional revenue, 28,174 euros of additional margin, and a ROI of +199.9 percent. It shows the commercial scalability potential.`,
-  'risks-final': `For the conclusion, I should end on a decision-oriented recommendation. Fiducial FPSG does not need to create a new innovation. The company already has the offers, the credibility and the client base. The priority is to structure the commercialization of existing offers.
-
-I should connect the final path to the whole defense: segment the right clients, equip the sales force, pilot with targeted clients, measure with monthly KPIs, then scale. The plan is realistic because it starts from current assets. It is measurable because it gives management indicators. It is profitable from the realistic scenario, with a ROI of +49.9 percent. The execution priorities are segmentation, sales team appropriation, client pilot and KPI monitoring. I should finish with the final message: by structuring the go-to-market approach, Fiducial FPSG can turn existing innovation into profitable commercial scalability.`,
-  'thank-you': `I should keep this slide very simple. I thank the jury for listening, then open the discussion confidently.
-
-If the first question is financial, I should come back to the 9,396 euro action budget, the 35 percent gross margin used for ROI, and the realistic scenario at +49.9 percent. If the question is operational, I should return to the sequence: segment, equip, pilot, measure and scale.`,
-  'a1-budget': `If I open this annex, I should use it only to answer a budget question. I can say that the total action budget is 9,396 euros: 8,300 euros of direct costs plus 1,096 euros of internal time valuation.
-
-The direct costs are 2,000 euros for the commercial offer portfolio, 3,500 euros for sales team training, 2,300 euros for the targeted pilot campaign and 500 euros for the KPI dashboard. The internal time is based on 89 estimated hours valued at 12.31 euros per hour. This makes the budget complete and easy to defend.`,
-  'a2-roi': `This annex is useful if the jury asks for the detailed ROI reasoning. I should repeat the formula: additional margin equals additional signed revenue multiplied by 35 percent. ROI equals additional margin minus the 9,396 euro action budget, divided by 9,396 euros.
-
-The important explanation is that the calculation uses margin, not revenue. At plus 10 percent additional signed revenue, the action plan generates 14,087 euros of additional margin. After deducting the 9,396 euro budget, the ROI is +49.9 percent. This makes the realistic scenario financially profitable.`,
-  'a3-kpi-template': `If I use this annex, I should explain the dashboard as a management routine. The first question is not only "how much revenue did we sign?" It is also "are salespeople presenting the offers?", "are clients accepting demonstrations?", "are quotes being issued?", and "why do some clients refuse?"
-
-The dashboard therefore combines activity, conversion, financial and qualitative indicators. Refusal reasons are especially useful after the pilot because they help adjust targeting, wording, pricing logic and proof elements.`,
-  'a4-benchmark-grid': `This annex supports the benchmark methodology. I should explain that the benchmark compares perspectives rather than simply listing competitors. The goal was to learn from different angles: safety training competition, pedagogical innovation, key account expectations and B2B sales strategy.
-
-If challenged on the selection of actors, I can answer that each actor was chosen for what it teaches Fiducial FPSG: how to package value, how to make innovation credible, how clients evaluate adoption risk, and how sales teams sell high-value offers.`,
-  'a5-jury-questions': `This annex is a backup for Q&A. I should not read it as a slide during the main flow. If I need it, the posture is simple: answer with evidence and stay careful on uncertain points.
-
-For example, if asked whether the ROI is reliable, I should explain the calculation directly: budget total 9,396 euros, gross margin 35 percent, ROI calculated on additional margin. If asked whether the numbers are invented, I should refer to the analyzed commercial proposals, 2025 signed revenue and the dissertation material.`,
-  'a6-offer-definitions': `This annex helps if the jury wants clarification on the offers. I should define each offer through client value. E-learning means customized digital training that can be reused and standardized. AR means augmenting a familiar safety training need with visual and interactive learning. VR means simulation, especially useful for road risk prevention.
-
-The key is to avoid technology-first definitions. I should always connect the format to prevention, compliance, engagement or operational risk management.`,
-  'a7-timing': `This annex is a private time-management support. If I am late during the defense, I should shorten the detailed diagnosis and preserve the action plan, budget, ROI and conclusion, because those slides prove the operational value of the mission.
-
-The target is about 34 to 38 minutes. I should keep a steady pace: concise opening, rigorous methodology, clear diagnosis, and enough time for recommendations and financial reasoning.`,
-  'a8-static-summary': `This annex can be used as a final backup summary. In one minute, I can say: Fiducial FPSG has existing high-value offers and credible expertise, but the commercial system is not structured enough to scale them consistently.
-
-The recommended answer is to clarify the commercial portfolio, train a first group of salespeople, run a 40-client pilot campaign, monitor dedicated KPIs and scale progressively. The final message is simple: innovation exists; commercial scalability must be built.`
-};
+const presenterScriptDetailsEN: Record<string, string> = {};
 
 export const getPresenterScriptEN = (slide: Slide) => {
   const base = presenterScriptsEN[slide.id] ?? slide.note.scriptFR;

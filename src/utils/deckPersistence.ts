@@ -15,6 +15,7 @@ export type EditableSlide = Slide & {
 export type DeckState = {
   slides: EditableSlide[];
   annexes: EditableSlide[];
+  presenterScriptVersion?: string;
   updatedAt?: string;
 };
 
