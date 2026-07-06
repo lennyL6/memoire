@@ -81,7 +81,26 @@ export default function App() {
   const restoreAllSlides = () => setDeckState((current) => ({ ...current, slides: current.slides.map((slide) => ({ ...slide, deleted: false })), annexes: current.annexes.map((slide) => ({ ...slide, deleted: false })) }));
 
   const sendPresenterCommand = (command: 'next' | 'prev' | 'roadmap' | 'annex') => {
-    const payload = { type: 'command', command, id: `${Date.now()}-${Math.random().toString(16).slice(2)}` };
+    const target = (() => {
+      if (command === 'roadmap') return { index: 1, annexIndex, inAnnex: false };
+      if (command === 'annex') return { index, annexIndex: inAnnex ? annexIndex : 0, inAnnex: !inAnnex };
+      if (inAnnex) {
+        const nextAnnexIndex = command === 'next'
+          ? Math.min(Math.max(0, annexes.length - 1), annexIndex + 1)
+          : Math.max(0, annexIndex - 1);
+        return { index, annexIndex: nextAnnexIndex, inAnnex: true };
+      }
+      const nextIndex = command === 'next'
+        ? Math.min(Math.max(0, slides.length - 1), index + 1)
+        : Math.max(0, index - 1);
+      return { index: nextIndex, annexIndex, inAnnex: false };
+    })();
+    const payload = { type: 'command', command, id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, ...target };
+    if (presenterMode) {
+      setIndex(Math.max(0, Math.min(slides.length - 1, target.index)));
+      setAnnexIndex(Math.max(0, Math.min(annexes.length - 1, target.annexIndex)));
+      setInAnnex(target.inAnnex);
+    }
     const channel = new BroadcastChannel('fpsg-defense');
     channel.postMessage(payload);
     channel.close();
@@ -145,6 +164,10 @@ export default function App() {
       if (!presenterMode && payload.type === 'command') {
         if (payload.id && processedCommandId.current === payload.id) return;
         processedCommandId.current = payload.id ?? null;
+        if (typeof payload.index === 'number' || typeof payload.annexIndex === 'number' || typeof payload.inAnnex === 'boolean') {
+          applyState(payload);
+          return;
+        }
         if (payload.command === 'next') goNext();
         if (payload.command === 'prev') goPrev();
         if (payload.command === 'roadmap') goRoadmap();
