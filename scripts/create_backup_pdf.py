@@ -15,7 +15,7 @@ LIGHT = HexColor('#E8ECEA')
 OFF = HexColor('#F7FAF8')
 
 slides = [
-('1', 'Opening', 'Enhancing the Commercial Development of High-Value Training Offers at Fiducial FPSG', ['E-learning, Augmented Reality & Virtual Reality', 'Lenny Lanfrey - MBA Management International Business - MBway Lyon - 2026']),
+('1', 'Opening', 'High-value training offers', ['From existing innovation to structured commercial growth', 'E-learning, Augmented Reality & Virtual Reality', 'Lenny Lanfrey - MBA Management International Business - MBway Lyon - 2026']),
 ('2', 'Executive roadmap', 'A consulting logic, from issue to recommendation', ['Business issue', 'Methodology', 'Diagnosis', 'Benchmark', 'Strategic synthesis', 'Action plan', 'Budget & ROI', 'Final recommendation']),
 ('3', 'Core business issue', 'Innovation exists. Scalability is the issue.', ['Existing high-value offers', 'Uneven sales force appropriation', 'Unclear positioning for some offers', 'Lack of dedicated monitoring']),
 ('4', 'Problem statement', 'How can Fiducial FPSG enhance and commercialize its high-value training offers: e-learning, augmented reality and virtual reality for professional clients, considering their commercial development potential?', ['Strategic issue', 'Commercial issue', 'Operational issue']),
@@ -30,7 +30,7 @@ slides = [
 ('13', 'Benchmark synthesis', 'Innovation must become perceived value', ['Apave: sell operational solutions', 'Rockefeller: pedagogical credibility matters', 'OCP: key accounts need proof and simplicity', 'Axe Capital: value-based selling and sales enablement']),
 ('14', 'Strategic synthesis', 'From innovation availability to commercial scalability', ['Clear value proposition -> Sales force appropriation -> Client understanding -> Adoption -> Commercial performance']),
 ('15', 'Target segmentation', 'Do not sell everything to everyone', ['E-learning: large accounts, multi-site clients, specific internal processes', 'AR: existing fire safety clients, SMEs, recurring B2B clients', 'VR: vehicle fleets, logistics, field teams, mobile employees']),
-('16', 'Recommended positioning', 'A safety training expert using digital and immersive levers', ['Fiducial FPSG should not become a technology provider', 'It should remain a safety training expert using digital and immersive solutions to improve compliance, prevention and learner engagement']),
+('16', 'Recommended positioning', 'A safety training expert using digital and immersive levers', ['Fiducial FPSG should remain a safety training expert', 'Digital and immersive solutions improve compliance, prevention and learner engagement']),
 ('17', 'Action plan overview', 'Four actions to structure commercial scalability', ['1. Create a clear commercial offer portfolio', '2. Train salespeople in value-based selling', '3. Launch a 40-client pilot campaign', '4. Implement dedicated KPIs and monthly monitoring']),
 ('18', 'Recommendation 1', 'Create a clear commercial offer portfolio', ['One sales sheet per offer', 'Target clients', 'Client problem solved', 'Key benefits', 'Price logic', 'Use cases', 'Objections', 'Proof elements']),
 ('19', 'Recommendation 2', 'Train salespeople in value-based selling', ['First group of 4 salespeople', '1-day session', 'Demonstrations', 'Objection handling', 'Discovery questionnaire', 'Internal training cost = 4 salespeople x 7 hours x loaded hourly cost']),
