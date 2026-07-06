@@ -12,6 +12,7 @@ type SlideShellProps = {
 
 export default function SlideShell({ slide, total, index, isPrint = false, children }: SlideShellProps) {
   const style = (slide as Slide & { style?: { fontFamily?: string; titleScale?: number; bodyScale?: number } }).style;
+  const isOpening = slide.kind === 'opening';
   const cssVars = {
     '--slide-font-family': style?.fontFamily || 'Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
     '--slide-title-scale': String(style?.titleScale ?? 1),
@@ -34,27 +35,35 @@ export default function SlideShell({ slide, total, index, isPrint = false, child
         <span />
         <span />
       </div>
-      <div className="absolute left-8 right-8 top-6 z-20 flex items-center justify-between text-xs font-semibold text-fiducial-anthracite/50">
-        <div className="flex items-center gap-3">
-          <img className="brand-logo brand-logo-header" src="/fiducial-fpsg-logo.png" alt="Fiducial FPSG" />
+      {!isOpening && (
+        <div className="absolute left-8 right-8 top-6 z-20 flex items-center justify-between text-xs font-semibold text-fiducial-anthracite/50">
+          <div className="flex items-center gap-3">
+            <img className="brand-logo brand-logo-header" src="/fiducial-fpsg-logo.png" alt="Fiducial FPSG" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span>{brand.website.replace('https://', '').replace('/', '')}</span>
+            <span className="rounded-full border border-fiducial-deep/10 bg-white/60 px-3 py-1 text-fiducial-deep">{slide.screen}/{total}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span>{brand.website.replace('https://', '').replace('/', '')}</span>
-          <span className="rounded-full border border-fiducial-deep/10 bg-white/60 px-3 py-1 text-fiducial-deep">{slide.screen}/{total}</span>
-        </div>
-      </div>
-      <main className="relative z-10 grid h-full grid-rows-[auto_1fr] gap-5 px-12 pb-12 pt-32">
-        <header>
-          {slide.eyebrow && <div className="kicker mb-2">{slide.eyebrow}</div>}
-          <h1 className="text-balance max-w-[1180px] text-[clamp(calc(2rem*var(--slide-title-scale)),calc(4.2vw*var(--slide-title-scale)),calc(4.85rem*var(--slide-title-scale)))] font-black leading-[0.95] tracking-[-0.06em] text-fiducial-anthracite">
-            {slide.title}
-          </h1>
-          {slide.subtitle && <p className="mt-4 max-w-[980px] text-xl font-medium leading-relaxed text-fiducial-anthracite/72">{slide.subtitle}</p>}
-        </header>
-        <div className="slide-safe min-h-0" style={{ transform: `scale(${style?.bodyScale ?? 1})`, transformOrigin: 'top left', width: `calc(100% / ${style?.bodyScale ?? 1})`, height: `calc(100% / ${style?.bodyScale ?? 1})` }}>{children}</div>
-      </main>
-      <div className="absolute bottom-5 left-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Lenny Lanfrey - MBA Management International Business - 2026</div>
-      <div className="absolute bottom-5 right-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Screen {index + 1}</div>
+      )}
+      {isOpening ? (
+        <main className="relative z-10 h-full p-0">
+          <div className="slide-safe h-full">{children}</div>
+        </main>
+      ) : (
+        <main className="relative z-10 grid h-full grid-rows-[auto_1fr] gap-5 px-12 pb-12 pt-32">
+          <header>
+            {slide.eyebrow && <div className="kicker mb-2">{slide.eyebrow}</div>}
+            <h1 className="text-balance max-w-[1180px] text-[clamp(calc(2rem*var(--slide-title-scale)),calc(4.2vw*var(--slide-title-scale)),calc(4.85rem*var(--slide-title-scale)))] font-black leading-[0.95] tracking-[-0.06em] text-fiducial-anthracite">
+              {slide.title}
+            </h1>
+            {slide.subtitle && <p className="mt-4 max-w-[980px] text-xl font-medium leading-relaxed text-fiducial-anthracite/72">{slide.subtitle}</p>}
+          </header>
+          <div className="slide-safe min-h-0" style={{ transform: `scale(${style?.bodyScale ?? 1})`, transformOrigin: 'top left', width: `calc(100% / ${style?.bodyScale ?? 1})`, height: `calc(100% / ${style?.bodyScale ?? 1})` }}>{children}</div>
+        </main>
+      )}
+      {!isOpening && <div className="absolute bottom-5 left-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Lenny Lanfrey - MBA Management International Business - 2026</div>}
+      {!isOpening && <div className="absolute bottom-5 right-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Screen {index + 1}</div>}
     </motion.section>
   );
 }

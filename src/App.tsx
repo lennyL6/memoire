@@ -297,27 +297,29 @@ function ThankYou() {
 function Opening({ slide }: { slide: Slide }) {
   const data = slide.data as Record<string, string>;
   return (
-    <div className="grid h-full grid-cols-[1.05fr_.95fr] gap-6">
-      <div className="opening-card deep-card flex min-h-0 flex-col justify-between rounded-[1.8rem] p-7">
-        <div className="min-h-0">
-          <div className="rounded-3xl bg-white/14 p-5">
-            <div className="text-xs font-black uppercase tracking-[.18em] text-white/60">Defense focus</div>
-            <p className="mt-3 max-w-xl text-[clamp(1.25rem,1.8vw,2rem)] font-black leading-tight tracking-[-0.035em]">
-              Turning existing innovation into structured, measurable and scalable commercial growth.
-            </p>
-          </div>
-          <div className="mt-4 grid grid-cols-3 gap-3">
-            {['Diagnosis', 'Action plan', 'ROI logic'].map((item) => (
-              <div key={item} className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-black text-white/82">{item}</div>
-            ))}
-          </div>
+    <div className="opening-cover relative h-full overflow-hidden rounded-[2rem]">
+      <img className="absolute inset-0 h-full w-full object-cover" src="/cover-commercial-growth.png" alt="" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(247,250,248,.96)_0%,rgba(247,250,248,.88)_34%,rgba(247,250,248,.36)_66%,rgba(247,250,248,.04)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/65 to-transparent" />
+      <div className="relative z-10 flex h-full max-w-[760px] flex-col justify-between px-12 py-10 text-fiducial-anthracite">
+        <div className="flex items-center justify-between gap-5">
+          <img className="brand-logo brand-logo-opening" src="/fiducial-fpsg-logo.png" alt="Fiducial FPSG" />
+          <span className="rounded-full border border-fiducial-deep/10 bg-white/70 px-4 py-2 text-xs font-black uppercase tracking-[.16em] text-fiducial-deep">MBA defense</span>
         </div>
-        <div className="rounded-2xl bg-white/14 p-4 text-sm font-semibold leading-relaxed text-white/82">
-          <span className="font-black text-white">{data.author}</span>
-          <span> - {data.programme} - {data.school} - {data.company} - {data.year}</span>
+        <div>
+          <div className="kicker mb-4">Mission d'expertise - 2026</div>
+          <h1 className="max-w-[720px] text-[clamp(3rem,5.1vw,6.2rem)] font-black leading-[.92] tracking-[-0.055em]">
+            High-value training offers
+          </h1>
+          <p className="mt-5 max-w-[600px] text-[clamp(1.25rem,1.75vw,2rem)] font-black leading-tight tracking-[-0.025em] text-fiducial-deep">
+            From existing innovation to structured commercial growth.
+          </p>
+        </div>
+        <div className="grid gap-3 text-sm font-bold leading-relaxed text-fiducial-anthracite/70">
+          <div className="inline-flex w-fit rounded-full bg-white/72 px-4 py-2 text-fiducial-deep">E-learning - Augmented Reality - Virtual Reality</div>
+          <div>{data.author} - {data.programme} - {data.school}</div>
         </div>
       </div>
-      <ThreeScene variant="opening" />
     </div>
   );
 }
@@ -360,7 +362,7 @@ function Problem({ slide }: { slide: Slide }) {
   return (
     <div className="grid h-full grid-cols-[1.3fr_.7fr] gap-6">
       <div className="deep-card flex flex-col justify-center rounded-[1.8rem] p-8">
-        <p className="text-balance text-[clamp(1.8rem,3.7vw,4.2rem)] font-black leading-[1.05] tracking-[-0.06em]">{slide.message}</p>
+        <p className="text-balance text-[clamp(1.2rem,2.45vw,2.75rem)] font-black leading-[1.14] tracking-[-0.025em]" style={{ fontFamily: 'Arial, sans-serif' }}>{slide.message}</p>
       </div>
       <div className="grid gap-4">
         {dimensions.map((d, i) => <motion.div key={d} className="glass flex items-center gap-4 rounded-[1.5rem] p-5" initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i*.08 }}><TopicIllustration variant={variants[i] ?? 'problem'} size="sm" /><span className="text-2xl font-black tracking-[-0.04em]">{d}</span></motion.div>)}
@@ -473,7 +475,7 @@ function Positioning({ slide }: { slide: Slide }) {
   return (
     <div className="grid h-full grid-cols-[1.15fr_.85fr] gap-5">
       <div className="deep-card flex min-h-0 flex-col justify-center rounded-[1.8rem] p-7">
-        <div className="text-[clamp(2.35rem,3.15vw,3.65rem)] font-black leading-[1.03] tracking-[-0.055em]">{slide.message}</div>
+        <div className="text-[clamp(1.55rem,2.35vw,2.85rem)] font-black leading-[1.16] tracking-[-0.025em]" style={{ fontFamily: 'Arial, sans-serif' }}>{slide.message}</div>
       </div>
       <ThreeScene variant="generic" />
     </div>
