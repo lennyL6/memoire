@@ -529,3 +529,8 @@ body {
   }
 }
 @page { size: 16in 9in; margin: 0; }
+
+.presentation-frame {
+  font-family: var(--slide-font-family);
+  font-size: calc(1rem * var(--slide-body-scale, 1));
+}

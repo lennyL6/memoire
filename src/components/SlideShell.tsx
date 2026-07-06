@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { brand, Slide } from '../data/presentationContent';
 
@@ -11,8 +11,15 @@ type SlideShellProps = {
 };
 
 export default function SlideShell({ slide, total, index, isPrint = false, children }: SlideShellProps) {
+  const style = (slide as Slide & { style?: { fontFamily?: string; titleScale?: number; bodyScale?: number } }).style;
+  const cssVars = {
+    '--slide-font-family': style?.fontFamily || 'Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+    '--slide-title-scale': String(style?.titleScale ?? 1),
+    '--slide-body-scale': String(style?.bodyScale ?? 1)
+  } as CSSProperties;
   return (
     <motion.section
+      style={cssVars}
       className="presentation-frame relative aspect-video w-full max-w-[1600px] overflow-hidden rounded-[2rem] border border-white/70 bg-fiducial-offwhite shadow-soft"
       initial={isPrint ? false : { opacity: 0, y: 18, scale: 0.992 }}
       animate={isPrint ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -39,12 +46,12 @@ export default function SlideShell({ slide, total, index, isPrint = false, child
       <main className="relative z-10 grid h-full grid-rows-[auto_1fr] gap-5 px-12 pb-12 pt-32">
         <header>
           {slide.eyebrow && <div className="kicker mb-2">{slide.eyebrow}</div>}
-          <h1 className="text-balance max-w-[1180px] text-[clamp(2rem,4.2vw,4.85rem)] font-black leading-[0.95] tracking-[-0.06em] text-fiducial-anthracite">
+          <h1 className="text-balance max-w-[1180px] text-[clamp(calc(2rem*var(--slide-title-scale)),calc(4.2vw*var(--slide-title-scale)),calc(4.85rem*var(--slide-title-scale)))] font-black leading-[0.95] tracking-[-0.06em] text-fiducial-anthracite">
             {slide.title}
           </h1>
           {slide.subtitle && <p className="mt-4 max-w-[980px] text-xl font-medium leading-relaxed text-fiducial-anthracite/72">{slide.subtitle}</p>}
         </header>
-        <div className="slide-safe min-h-0">{children}</div>
+        <div className="slide-safe min-h-0" style={{ transform: `scale(${style?.bodyScale ?? 1})`, transformOrigin: 'top left', width: `calc(100% / ${style?.bodyScale ?? 1})`, height: `calc(100% / ${style?.bodyScale ?? 1})` }}>{children}</div>
       </main>
       <div className="absolute bottom-5 left-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Lenny Lanfrey - MBA Management International Business - 2026</div>
       <div className="absolute bottom-5 right-8 z-20 text-xs font-semibold text-fiducial-anthracite/35">Screen {index + 1}</div>
