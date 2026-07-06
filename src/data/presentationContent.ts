@@ -533,7 +533,7 @@ export const annexes: Slide[] = [
 
 const lines = (...items: string[]) => items.map((item) => `- ${item}`).join('\n\n');
 
-export const presenterScriptVersion = 'jury-script-2026-07-07-v3';
+export const presenterScriptVersion = 'jury-cues-2026-07-07-v4';
 
 export const presenterScriptsEN: Record<string, string> = {
   opening: lines(
@@ -678,6 +678,16 @@ export const presenterScriptsEN: Record<string, string> = {
 const presenterScriptDetailsEN: Record<string, string> = {};
 
 export const getPresenterScriptEN = (slide: Slide) => {
+  const brief = slideBriefs[slide.id];
+  if (brief) {
+    return [
+      `🟢 Message clé : ${brief.keyMessage}`,
+      `🟢 Preuve à ne pas oublier : ${brief.proof}`,
+      `🟢 Conclusion de la slide : ${brief.conclusion}`,
+      `🟢 Transition : ${brief.transition}`,
+      brief.usefulDetail ? `🔵 Useful detail if time : ${brief.usefulDetail}` : ''
+    ].filter(Boolean).join('\n\n');
+  }
   const base = presenterScriptsEN[slide.id] ?? slide.note.scriptFR;
   const detail = presenterScriptDetailsEN[slide.id];
   return [base, detail].filter(Boolean).join('\n\n');

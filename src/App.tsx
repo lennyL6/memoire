@@ -17,7 +17,7 @@ import RoiScenarioChart from './components/RoiScenarioChart';
 import Timeline3D from './components/Timeline3D';
 import KpiDashboard from './components/KpiDashboard';
 import TopicIllustration, { TopicVariant } from './components/TopicIllustration';
-import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, presenterScriptVersion, roiScenarios, segmentation, slideBriefs, slides as defaultSlides, timeline, timingPlan, Slide, SlideBrief } from './data/presentationContent';
+import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, presenterScriptVersion, roiScenarios, segmentation, slideBriefs, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
 import { DeckState, EditableSlide, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
 import { formatEuro } from './utils/format';
 
@@ -260,11 +260,6 @@ export default function App() {
 }
 
 function SlideContent({ slide }: { slide: Slide }) {
-  const brief = slideBriefs[slide.id];
-  if (brief && slide.kind === 'opening') return <OpeningBrief slide={slide} brief={brief} />;
-  if (brief && slide.kind === 'pilot') return <BriefSlide slide={slide} brief={brief} side={<WeekPlan />} />;
-  if (brief && slide.kind !== 'annex') return <BriefSlide slide={slide} brief={brief} />;
-
   switch (slide.kind) {
     case 'opening': return <Opening slide={slide} />;
     case 'roadmap': return <Roadmap slide={slide} />;
@@ -302,115 +297,6 @@ function ThankYou() {
       <TopicIllustration variant="summary" size="lg" tone="deep" className="mb-8" />
       <div className="text-[clamp(3rem,6vw,7rem)] font-black leading-none tracking-[-0.06em] text-white">Thank you for listening</div>
       <div className="mt-8 rounded-3xl bg-white/15 px-8 py-5 text-[clamp(1.5rem,2.2vw,2.7rem)] font-black tracking-[-0.04em] text-white">Ready to answer your questions.</div>
-    </div>
-  );
-}
-
-function BriefSlide({ slide, brief, side }: { slide: Slide; brief: SlideBrief; side?: React.ReactNode }) {
-  const hasDetail = Boolean(brief.usefulDetail);
-  return (
-    <div className={side ? 'grid h-full grid-cols-[1fr_.95fr] gap-5' : 'grid h-full grid-cols-[1.12fr_.88fr] gap-5'}>
-      <div className="deep-card flex min-h-0 flex-col justify-between rounded-[1.8rem] p-6">
-        <div>
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/16">
-              <CheckCircle2 size={24} />
-            </span>
-            <div>
-              <div className="text-xs font-black uppercase tracking-[.18em] text-white/70">Message clé</div>
-              <h3 className="mt-2 text-[clamp(1.55rem,2.45vw,3rem)] font-black leading-[1.08] tracking-[-0.04em] text-white">{brief.keyMessage}</h3>
-            </div>
-          </div>
-        </div>
-        <BriefPoint label="Conclusion de la slide" text={brief.conclusion} tone="greenDeep" />
-      </div>
-      <div className={side && hasDetail ? 'grid min-h-0 grid-rows-[.62fr_.62fr_.5fr_1.35fr] gap-3' : 'grid min-h-0 grid-rows-[1fr_1fr_auto] gap-3'}>
-        <BriefPoint label="Preuve à ne pas oublier" text={brief.proof} tone="green" />
-        <BriefPoint label="Transition" text={brief.transition} tone="green" />
-        {hasDetail ? <BriefPoint label="Useful detail if time" text={brief.usefulDetail ?? ''} tone="blue" /> : side}
-        {hasDetail && side ? <div className="min-h-0">{side}</div> : null}
-      </div>
-    </div>
-  );
-}
-
-function OpeningBrief({ slide, brief }: { slide: Slide; brief: SlideBrief }) {
-  const data = slide.data as Record<string, string>;
-  return (
-    <div className="opening-cover relative h-full overflow-hidden rounded-[2rem]">
-      <img className="absolute inset-0 h-full w-full object-cover" src="/cover-commercial-growth.png" alt="" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(247,250,248,.96)_0%,rgba(247,250,248,.86)_38%,rgba(247,250,248,.42)_70%,rgba(247,250,248,.08)_100%)]" />
-      <div className="relative z-10 grid h-full grid-cols-[.88fr_1.12fr] gap-5 p-10 text-fiducial-anthracite">
-        <div className="flex h-full flex-col justify-between">
-          <div>
-            <img className="brand-logo brand-logo-opening" src="/fiducial-fpsg-logo.png" alt="Fiducial FPSG" />
-            <div className="kicker mt-12">Mission d'expertise - 2026</div>
-            <h1 className="mt-4 max-w-[620px] text-[clamp(2.7rem,4.5vw,5.5rem)] font-black leading-[.93] tracking-[-0.055em]">
-              High-value training offers
-            </h1>
-          </div>
-          <div className="grid gap-2 text-sm font-bold leading-relaxed text-fiducial-anthracite/70">
-            <div className="inline-flex w-fit rounded-full bg-white/72 px-4 py-2 text-fiducial-deep">E-learning - Augmented Reality - Virtual Reality</div>
-            <div>{data.author} - {data.programme} - {data.school}</div>
-          </div>
-        </div>
-        <div className="grid h-full grid-rows-[1fr_.82fr_.82fr_.82fr] gap-3">
-          <BriefPoint label="Message clé" text={brief.keyMessage} tone="green" large />
-          <BriefPoint label="Preuve à ne pas oublier" text={brief.proof} tone="green" />
-          <BriefPoint label="Conclusion de la slide" text={brief.conclusion} tone="green" />
-          <BriefPoint label="Transition" text={brief.transition} tone="green" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function BriefPoint({ label, text, tone, large = false }: { label: string; text: string; tone: 'green' | 'greenDeep' | 'blue'; large?: boolean }) {
-  const isBlue = tone === 'blue';
-  const isDeep = tone === 'greenDeep';
-  const classes = isBlue
-    ? 'border-sky-300/60 bg-sky-50/92 text-[#143D61]'
-    : isDeep
-      ? 'border-white/15 bg-white/16 text-white'
-      : 'border-fiducial-deep/10 bg-white/86 text-fiducial-anthracite';
-  const labelClasses = isBlue ? 'text-sky-700' : isDeep ? 'text-white/68' : 'text-fiducial-deep';
-  const markerClasses = isBlue ? 'bg-sky-500' : isDeep ? 'bg-white' : 'bg-fiducial-accent';
-  return (
-    <motion.div
-      className={`flex min-h-0 flex-col justify-center rounded-[1.35rem] border p-4 shadow-sm ${classes}`}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <div className={`flex items-center gap-2 text-[.68rem] font-black uppercase tracking-[.16em] ${labelClasses}`}>
-        <span className={`h-2.5 w-2.5 rounded-full ${markerClasses}`} />
-        {label}
-      </div>
-      <p className={`${large ? 'mt-4 text-[clamp(1.3rem,1.9vw,2.35rem)]' : 'mt-3 text-[clamp(1rem,1.38vw,1.45rem)]'} font-black leading-[1.14] tracking-[-0.025em]`}>
-        {text}
-      </p>
-    </motion.div>
-  );
-}
-
-function WeekPlan() {
-  return (
-    <div className="glass h-full rounded-[1.35rem] border border-fiducial-deep/10 bg-white/90 p-3">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <div className="kicker">6-week execution</div>
-          <div className="mt-1 text-lg font-black leading-tight tracking-[-0.04em] text-fiducial-anthracite">Clarify, train, launch, measure</div>
-        </div>
-        <div className="rounded-2xl bg-fiducial-mint px-3 py-2 text-right text-[10px] font-black leading-tight text-fiducial-deep">40 clients<br />first</div>
-      </div>
-      <div className="mt-2 grid grid-cols-6 gap-1.5">
-        {timeline.map((step) => (
-          <div key={step.week} className="rounded-xl border border-fiducial-deep/10 bg-white/86 p-1.5">
-            <div className="inline-flex rounded-full bg-fiducial-deep px-2 py-0.5 text-[9px] font-black text-white">{step.week}</div>
-            <div className="mt-1 text-[.54rem] font-black uppercase tracking-[.08em] text-fiducial-deep">{step.title}</div>
-            <div className="mt-1 text-[8.5px] font-bold leading-tight text-fiducial-anthracite/68">{step.actions[0]}</div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -708,6 +594,7 @@ function PresenterView({
   }, [seconds]);
   const nextSlide = activeDeck[Math.min(activeDeck.length - 1, activeIndex + 1)];
   const progress = ((activeIndex + 1) / activeDeck.length) * 100;
+  const activeBrief = slideBriefs[activeSlide.id];
   const updateScript = (value: string) => {
     setScript(value);
     onChangeSlide({ presenterScript: value });
@@ -763,14 +650,79 @@ function PresenterView({
             <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral script</div>
             <div className="mt-2 text-xs font-bold text-white/48">{saveStatus}</div>
           </div>
-          <textarea
-            className="mt-4 min-h-0 flex-1 resize-none rounded-[1.2rem] border border-white/10 bg-[#0b1110] p-5 text-[1.08rem] font-semibold leading-[1.62] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
-            value={script}
-            onChange={(event) => updateScript(event.target.value)}
-            spellCheck={false}
-          />
+          {activeBrief ? (
+            <PresenterCueEditor script={script} onChange={updateScript} />
+          ) : (
+            <textarea
+              className="mt-4 min-h-0 flex-1 resize-none rounded-[1.2rem] border border-white/10 bg-[#0b1110] p-5 text-[1.08rem] font-semibold leading-[1.62] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
+              value={script}
+              onChange={(event) => updateScript(event.target.value)}
+              spellCheck={false}
+            />
+          )}
         </section>
       </div>
+    </div>
+  );
+}
+
+type PresenterCue = {
+  marker: '🟢' | '🔵';
+  label: string;
+  text: string;
+};
+
+const cueOrder = [
+  { marker: '🟢' as const, label: 'Message clé' },
+  { marker: '🟢' as const, label: 'Preuve à ne pas oublier' },
+  { marker: '🟢' as const, label: 'Conclusion de la slide' },
+  { marker: '🟢' as const, label: 'Transition' },
+  { marker: '🔵' as const, label: 'Useful detail if time' }
+];
+
+function parsePresenterCues(script: string): PresenterCue[] {
+  const lines = script.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+  const parsed = lines.map((line) => {
+    const match = line.match(/^(🟢|🔵)\s*([^:]+?)\s*:\s*(.*)$/);
+    if (!match) return null;
+    return { marker: match[1] as '🟢' | '🔵', label: match[2].trim(), text: match[3].trim() };
+  }).filter(Boolean) as PresenterCue[];
+  return cueOrder
+    .map((cue) => parsed.find((item) => item.label === cue.label) ?? (cue.label === 'Useful detail if time' ? null : { ...cue, text: '' }))
+    .filter(Boolean) as PresenterCue[];
+}
+
+function serializePresenterCues(cues: PresenterCue[]) {
+  return cues
+    .filter((cue) => cue.text.trim())
+    .map((cue) => `${cue.marker} ${cue.label} : ${cue.text.trim()}`)
+    .join('\n\n');
+}
+
+function PresenterCueEditor({ script, onChange }: { script: string; onChange: (value: string) => void }) {
+  const cues = parsePresenterCues(script);
+  const updateCue = (index: number, text: string) => {
+    const next = cues.map((cue, i) => i === index ? { ...cue, text } : cue);
+    onChange(serializePresenterCues(next));
+  };
+  return (
+    <div className="mt-4 grid min-h-0 flex-1 grid-rows-[repeat(4,minmax(0,1fr))_auto] gap-3 overflow-y-auto pr-1">
+      {cues.map((cue, index) => {
+        const isBlue = cue.marker === '🔵';
+        return (
+          <div key={cue.label} className={isBlue ? 'rounded-[1.2rem] border border-sky-400/35 bg-sky-500/12 p-4' : 'rounded-[1.2rem] border border-fiducial-accent/25 bg-fiducial-accent/12 p-4'}>
+            <div className={isBlue ? 'text-xs font-black uppercase tracking-[.16em] text-sky-300' : 'text-xs font-black uppercase tracking-[.16em] text-fiducial-accent'}>
+              {cue.marker} {cue.label}
+            </div>
+            <textarea
+              className="mt-2 min-h-[4.2rem] w-full resize-none rounded-xl border border-white/10 bg-[#0b1110]/72 p-3 text-[1.02rem] font-semibold leading-[1.45] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
+              value={cue.text}
+              onChange={(event) => updateCue(index, event.target.value)}
+              spellCheck={false}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
