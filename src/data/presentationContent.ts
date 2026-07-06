@@ -50,6 +50,14 @@ export type Slide = {
   data?: Record<string, unknown>;
 };
 
+export type SlideBrief = {
+  keyMessage: string;
+  proof: string;
+  conclusion: string;
+  transition: string;
+  usefulDetail?: string;
+};
+
 export const brand = {
   company: 'Fiducial FPSG',
   website: 'https://www.fiducial-fpsg.fr/',
@@ -172,13 +180,175 @@ export const kpis = [
 ];
 
 export const timeline = [
-  { month: 'M1', title: 'Clarify', actions: ['Formalize positioning', 'Create concise sales materials'] },
-  { month: 'M2', title: 'Train', actions: ['1-day session', 'Sales scripts', 'Objection handling'] },
-  { month: 'M3', title: 'Launch', actions: ['Select 40 clients', 'Segment by offer relevance'] },
-  { month: 'M4', title: 'Demonstrate', actions: ['Pilot sessions', 'Quotes', 'Client feedback'] },
-  { month: 'M5', title: 'Analyze', actions: ['Review conversion', 'Capture refusal reasons'] },
-  { month: 'M6', title: 'Scale', actions: ['Adjust pitch', 'Extend to wider portfolio'] }
+  { week: 'W1', title: 'Clarify', actions: ['Formalize positioning', 'Create concise sales materials'] },
+  { week: 'W2', title: 'Train', actions: ['1-day session', 'Sales scripts', 'Objection handling'] },
+  { week: 'W3', title: 'Launch', actions: ['Select 40 clients', 'Segment by offer relevance'] },
+  { week: 'W4', title: 'Demonstrate', actions: ['Pilot sessions', 'Quotes', 'Client feedback'] },
+  { week: 'W5', title: 'Analyze', actions: ['Review conversion', 'Capture refusal reasons'] },
+  { week: 'W6', title: 'Scale', actions: ['Adjust pitch', 'Extend to wider portfolio'] }
 ];
+
+export const slideBriefs: Record<string, SlideBrief> = {
+  opening: {
+    keyMessage: 'Mission de conseil sur la transformation d’offres innovantes en croissance commerciale.',
+    proof: '3 offres étudiées : e-learning, réalité augmentée incendie, réalité virtuelle risque routier.',
+    conclusion: 'Le sujet n’est pas technologique, il est commercial.',
+    transition: 'Je vais suivre une logique de consultant : problème, diagnostic, recommandations, ROI.'
+  },
+  roadmap: {
+    keyMessage: 'La présentation suit une logique de mission de conseil, du diagnostic à la décision.',
+    proof: '8 blocs : business issue, methodology, diagnosis, benchmark, strategic synthesis, action plan, budget & ROI, final recommendation.',
+    conclusion: 'L’objectif est de passer d’un constat à un plan exploitable par Fiducial FPSG.',
+    transition: 'Je commence par le problème business central.'
+  },
+  'core-issue': {
+    keyMessage: 'Fiducial FPSG already has innovative offers; the real issue is commercial scalability.',
+    proof: 'Main barriers: unclear positioning, uneven sales appropriation, and lack of dedicated monitoring.',
+    conclusion: 'The issue is not available innovation, but the commercial system around it.',
+    transition: 'This leads to a strategic, commercial and operational problem statement.'
+  },
+  'problem-statement': {
+    keyMessage: 'The problem statement focuses on turning high-value offers into real commercial potential.',
+    proof: 'Central question: how to enhance and commercialize e-learning, AR and VR for professional clients.',
+    conclusion: 'The answer must cover strategy, sales execution and operational implementation.',
+    transition: 'To answer this properly, I used a mixed methodology.'
+  },
+  methodology: {
+    keyMessage: 'The methodology avoids a purely theoretical or intuitive recommendation.',
+    proof: 'Literature review, internal diagnosis, offer analysis, benchmark, strategic synthesis, recommendations, budget and ROI.',
+    conclusion: 'The recommendations are based on theory, field observation, commercial evidence and external comparison.',
+    transition: 'The benchmark was built around four complementary perspectives.'
+  },
+  'benchmark-logic': {
+    keyMessage: 'The benchmark does not only compare competitors; it covers four angles of the commercial issue.',
+    proof: 'Apave = competitor; Rockefeller = pedagogy; OCP = key account client; Axe Capital = B2B sales.',
+    conclusion: 'Each actor provides a useful lesson for Fiducial FPSG.',
+    transition: 'Before presenting the benchmark lessons, I first need to explain the maturity of the three offers.',
+    usefulDetail: 'The benchmark criteria are perceived value, adoption barriers, target clients, sales tools and lessons for Fiducial FPSG.'
+  },
+  'offers-snapshot': {
+    keyMessage: 'The three offers do not have the same level of commercial maturity.',
+    proof: 'E-learning = high potential; AR = most accessible offer; VR = relevant but underactivated.',
+    conclusion: 'A single generic strategy for the three offers would not be effective.',
+    transition: 'I will start with e-learning, which has the strongest key account potential.'
+  },
+  'elearning-diagnosis': {
+    keyMessage: 'E-learning is a high-value offer, but its internal commercial scalability is limited.',
+    proof: 'Decathlon €4,500, Paris La Défense €5,720, IBM €13,560 excluding tax.',
+    conclusion: 'The offer must be sold as a reusable digital asset, not as a simple online module.',
+    transition: 'Augmented reality is different because it is more immediately accessible commercially.',
+    usefulDetail: 'The client buys a customized project: client process, tailored content, SCORM delivery and reuse.'
+  },
+  'ar-diagnosis': {
+    keyMessage: 'Augmented reality is the most mature short-term commercial lever.',
+    proof: 'Familiar need: fire safety; demonstrable value; visual impact; upsell potential.',
+    conclusion: 'AR is already understandable for clients, but it still needs stronger commercial structuring and monitoring.',
+    transition: 'Virtual reality is different: it is pedagogically relevant, but commercially more fragile.'
+  },
+  'vr-diagnosis': {
+    keyMessage: 'Virtual reality is relevant, but still commercially underactivated.',
+    proof: 'Professional road risk, mobile workers, realistic scenarios, and gadget perception risk.',
+    conclusion: 'VR must be sold as road risk prevention, not as a technological experience.',
+    transition: 'These offer-level findings are confirmed by the broader internal diagnosis.'
+  },
+  'internal-diagnosis': {
+    keyMessage: 'The assets are real, but the commercial system is incomplete.',
+    proof: 'Strengths: existing offers, safety credibility, B2B client base, e-learning capability, positive AR feedback.',
+    conclusion: 'The problem is not the quality of the offers, but their commercial structuring.',
+    transition: 'The external diagnosis shows that the market is favorable, but adoption is not automatic.',
+    usefulDetail: 'Main weaknesses: no dedicated objectives, insufficient internal training, limited sales materials and no specific KPI dashboard.'
+  },
+  'external-diagnosis': {
+    keyMessage: 'Demand is evolving, but adoption of innovative offers is not automatic.',
+    proof: 'Opportunities: flexibility, scalability, modernization, upselling and differentiation.',
+    conclusion: 'The market can be receptive if the value is clear, simple and proven.',
+    transition: 'The benchmark confirms the need to transform innovation into perceived value.',
+    usefulDetail: 'Threats: price sensitivity, resistance to change, attachment to face-to-face training, gadget perception and difficult short-term ROI proof.'
+  },
+  'benchmark-synthesis': {
+    keyMessage: 'The benchmark confirms that innovation must become perceived value.',
+    proof: 'Apave = operational solution; Rockefeller = pedagogical credibility; OCP = proof and simplicity; Axe = value-based selling.',
+    conclusion: 'Fiducial FPSG must better package, prove, sell and monitor its offers.',
+    transition: 'These lessons lead to the strategic shift from available innovation to commercial scalability.'
+  },
+  'strategic-synthesis': {
+    keyMessage: 'The strategy is to move from innovation availability to commercial scalability.',
+    proof: 'Chain: value proposition → sales appropriation → client understanding → adoption → performance.',
+    conclusion: 'Performance depends on a structured commercial system, not only on the quality of the offers.',
+    transition: 'This system starts with clear target segmentation.'
+  },
+  segmentation: {
+    keyMessage: 'Fiducial FPSG should not sell every offer to every client.',
+    proof: 'E-learning = large accounts/multi-site clients; AR = fire safety clients/SMEs/recurring clients; VR = fleets/logistics/mobile teams.',
+    conclusion: 'Good segmentation reduces price resistance because each offer answers a real client problem.',
+    transition: 'This segmentation must be supported by a clear positioning.'
+  },
+  positioning: {
+    keyMessage: 'Fiducial FPSG should remain a safety training expert using digital and immersive solutions as levers.',
+    proof: 'The company should not become a technology provider; credibility comes from safety, compliance and prevention.',
+    conclusion: 'Digital and immersive solutions reinforce the expertise; they do not replace it.',
+    transition: 'This positioning is translated into four operational actions.'
+  },
+  'action-overview': {
+    keyMessage: 'The action plan structures commercial scalability through four levers.',
+    proof: 'Commercial portfolio, sales training, 40-client pilot campaign, KPI dashboard.',
+    conclusion: 'The first two actions prepare the system; the last two test and monitor it.',
+    transition: 'The first action is to clarify the commercial offer portfolio.'
+  },
+  'rec-portfolio': {
+    keyMessage: 'The first recommendation is to create a clear commercial offer portfolio.',
+    proof: 'One sales sheet per offer with targets, client problem, benefits, pricing logic, use cases, objections and proof.',
+    conclusion: 'The objective is to give salespeople a common and usable commercial language.',
+    transition: 'But sales materials are not enough; salespeople must also appropriate the offers.'
+  },
+  'rec-training': {
+    keyMessage: 'The second recommendation is to train salespeople in value-based selling.',
+    proof: '4 salespeople, 1 day, demonstrations, objection handling and discovery questionnaire.',
+    conclusion: 'The goal is to move from product description to client value explanation.',
+    transition: 'Once the sales force is equipped, the approach must be tested on a pilot portfolio.',
+    usefulDetail: 'Internal cost formula = 4 salespeople × 7 hours × loaded hourly cost.'
+  },
+  'rec-pilot': {
+    keyMessage: 'The third recommendation is to launch a 40-client pilot campaign before scaling.',
+    proof: 'Selection, segmentation, email, phone follow-up, demonstration, refusal analysis.',
+    conclusion: 'The pilot is not only a sales action; it is also a market learning mechanism.',
+    transition: 'To make this learning useful, the company needs KPI monitoring.',
+    usefulDetail: 'Six-week timeline: clarify, train, launch, demonstrate, analyze and scale.'
+  },
+  'rec-kpi': {
+    keyMessage: 'The fourth recommendation is to install a dedicated KPI dashboard.',
+    proof: 'These indicators are recommended management indicators; they are not existing results.',
+    conclusion: 'The dashboard turns isolated opportunities into a managed commercial priority.',
+    transition: 'These four actions are then translated into a complete budget.',
+    usefulDetail: 'Activation + performance: offers presented, demonstrations, quotes, conversion, revenue, margin, satisfaction and refusal reasons.'
+  },
+  'budget-baseline': {
+    keyMessage: 'The budget is controlled and includes both direct costs and internal time.',
+    proof: 'Direct costs €8,300; internal time €1,096; total budget €9,396.',
+    conclusion: 'Compared with the 2025 baseline of €402,479, the budget remains proportionate.',
+    transition: 'The next question is whether this budget can generate profitable growth.',
+    usefulDetail: 'Internal time = 89 hours × €12.31 gross/hour.'
+  },
+  'roi-break-even': {
+    keyMessage: 'The realistic scenario makes the plan profitable.',
+    proof: '35% margin assumption; realistic scenario +10% = +49.9% ROI.',
+    conclusion: 'The plan does not need an extreme growth scenario to become financially defendable.',
+    transition: 'The final recommendation is therefore to structure, activate and scale the offers.',
+    usefulDetail: 'Conservative +5% = negative ROI; ambitious +20% = highly favorable ROI.'
+  },
+  'risks-final': {
+    keyMessage: 'The final recommendation is to structure, activate and scale the existing offers.',
+    proof: 'Fiducial FPSG already has the offers, the credibility and the client base.',
+    conclusion: 'The priority is to transform these offers into structured, measurable and profitable growth drivers.',
+    transition: 'Success will depend on sales appropriation, targeted client selection and monthly KPI monitoring.'
+  },
+  'thank-you': {
+    keyMessage: 'Thank you for listening.',
+    proof: 'No additional detail; keep the closing clean.',
+    conclusion: 'Ready to answer your questions.',
+    transition: 'Move to jury questions.'
+  }
+};
 
 const notes = (slideId: string, title: string, purpose: string, duration: string, scriptFR: string, keySentence: string, juryRisk: string, shortAnswer: string): Note => ({
   slideId,
@@ -363,7 +533,7 @@ export const annexes: Slide[] = [
 
 const lines = (...items: string[]) => items.map((item) => `- ${item}`).join('\n\n');
 
-export const presenterScriptVersion = 'jury-script-2026-07-06-v2';
+export const presenterScriptVersion = 'jury-script-2026-07-07-v3';
 
 export const presenterScriptsEN: Record<string, string> = {
   opening: lines(
@@ -467,7 +637,7 @@ export const presenterScriptsEN: Record<string, string> = {
   'rec-pilot': lines(
     'The third recommendation is to launch a 40-client pilot campaign before scaling the approach more broadly.',
     'The campaign sequence is simple: select the clients, segment them by offer relevance, contact them, follow up, propose demonstrations and learn from refusal reasons.',
-    'The six-month execution timeline makes the plan operational: clarify in month one, train in month two, launch in month three, demonstrate and analyze in months four and five, then scale in month six.'
+    'The six-week execution timeline makes the plan operational: clarify in week one, train in week two, launch in week three, demonstrate in week four, analyze in week five, then scale in week six.'
   ),
   'rec-kpi': lines(
     'The fourth recommendation is to install a dedicated KPI dashboard to move from isolated opportunities to a managed commercial priority.',

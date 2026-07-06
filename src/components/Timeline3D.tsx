@@ -13,7 +13,7 @@ export default function Timeline3D() {
         <div className="flex min-w-0 items-center gap-3">
           <TopicIllustration variant="roadmap" size="sm" mode="image" className="shrink-0" />
           <div className="min-w-0">
-            <div className="kicker">6-month execution</div>
+            <div className="kicker">6-week execution</div>
             <h3 className="mt-1 max-w-xl text-2xl font-black leading-tight tracking-[-0.055em] text-fiducial-anthracite">
               Clarify, train, pilot, then scale
             </h3>
@@ -28,7 +28,7 @@ export default function Timeline3D() {
       <div className="relative z-10 mt-3 grid grid-cols-3 grid-rows-[150px_150px] gap-3">
         {timeline.map((step, i) => (
           <motion.div
-            key={step.month}
+            key={step.week}
             className="month-card group relative h-[150px] overflow-hidden rounded-2xl border border-fiducial-deep/10 bg-white/78 p-3 shadow-sm transition hover:-translate-y-1 hover:bg-white/95 hover:shadow-glass"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ export default function Timeline3D() {
           >
             <div className="absolute right-2 top-2 h-14 w-14 rounded-full bg-fiducial-mint/70 transition group-hover:scale-110" />
             <div className="flex items-center justify-between">
-              <div className="rounded-full bg-fiducial-deep px-3 py-1 text-xs font-black text-white shadow-sm">{step.month}</div>
+              <div className="rounded-full bg-fiducial-deep px-3 py-1 text-xs font-black text-white shadow-sm">{step.week}</div>
               <TopicIllustration variant={monthVariants[i] ?? 'roadmap'} size="xs" />
             </div>
             <div className="mt-2 text-[.7rem] font-black uppercase tracking-[.12em] text-fiducial-deep">{step.title}</div>
