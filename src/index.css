@@ -28,6 +28,15 @@ body {
   min-height: 0;
 }
 
+.presenter-slide-preview .presentation-frame {
+  width: 1600px;
+  min-width: 1600px;
+  max-width: 1600px;
+  border-radius: 1rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+  zoom: .45;
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.74);
   border: 1px solid rgba(255, 255, 255, 0.78);

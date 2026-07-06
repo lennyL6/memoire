@@ -5,7 +5,7 @@ Interactive web presentation for the MBA Management International Business missi
 **Subject:** Enhancing the Commercial Development of High-Value Training Offers at Fiducial FPSG  
 **Scope:** E-learning, Augmented Reality, Virtual Reality  
 **Target oral duration:** 34 to 38 minutes  
-**Main screens:** 24 maximum  
+**Main screens:** 25  
 **Annexes:** 8 backup screens accessible with `A`
 
 ---
@@ -107,7 +107,7 @@ Presenter view:
 
 ## 6. Screen structure
 
-Main presentation: 24 screens.
+Main presentation: 25 screens.
 
 1. Opening  
 2. Executive roadmap  
@@ -132,7 +132,8 @@ Main presentation: 24 screens.
 21. Recommendation 4 - KPI dashboard  
 22. Budget and 2025 baseline  
 23. ROI scenarios  
-24. Final recommendation
+24. Final recommendation  
+25. Thank you and Q&A
 
 Annexes:
 
@@ -156,7 +157,7 @@ Annexes:
 | Diagnosis | 7-12 | 10-12 min |
 | Benchmark / synthesis | 13-16 | 6-7 min |
 | Action plan | 17-21 | 8-10 min |
-| Budget / ROI / risks / conclusion | 22-24 | 8-10 min |
+| Budget / ROI / conclusion / Q&A opening | 22-25 | 8-10 min |
 
 Target total: **34 to 38 minutes**.
 

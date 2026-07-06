@@ -15,7 +15,6 @@ export default function BudgetChart() {
             <div className="kicker">Direct action costs</div>
             <h3 className="text-3xl font-black tracking-[-0.05em]">{formatEuro(financialBaseline.directCostTotal)}</h3>
           </div>
-          <div className="rounded-2xl bg-fiducial-mint px-4 py-3 text-right text-xs font-black uppercase tracking-[.14em] text-fiducial-deep">One budget<br />to defend</div>
         </div>
         <ResponsiveContainer width="100%" height="78%">
           <BarChart data={chartData} margin={{ top: 16, right: 10, left: 0, bottom: 0 }}>

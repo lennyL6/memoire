@@ -16,10 +16,10 @@ OFF = HexColor('#F7FAF8')
 
 slides = [
 ('1', 'Opening', 'Enhancing the Commercial Development of High-Value Training Offers at Fiducial FPSG', ['E-learning, Augmented Reality & Virtual Reality', 'Lenny Lanfrey - MBA Management International Business - MBway Lyon - 2026']),
-('2', 'Executive roadmap', 'A consulting logic, from issue to recommendation', ['Business issue', 'Methodology', 'Diagnosis', 'Benchmark', 'Strategic synthesis', 'Action plan', 'Budget & ROI', 'Risks & final recommendation']),
+('2', 'Executive roadmap', 'A consulting logic, from issue to recommendation', ['Business issue', 'Methodology', 'Diagnosis', 'Benchmark', 'Strategic synthesis', 'Action plan', 'Budget & ROI', 'Final recommendation']),
 ('3', 'Core business issue', 'Innovation exists. Scalability is the issue.', ['Existing high-value offers', 'Uneven sales force appropriation', 'Unclear positioning for some offers', 'Lack of dedicated monitoring']),
 ('4', 'Problem statement', 'How can Fiducial FPSG enhance and commercialize its high-value training offers: e-learning, augmented reality and virtual reality for professional clients, considering their commercial development potential?', ['Strategic issue', 'Commercial issue', 'Operational issue']),
-('5', 'Methodology', 'A mixed approach to avoid a purely theoretical answer', ['Literature review', 'Internal diagnosis', 'Existing offers and commercial proposals', 'Four-perspective benchmark', 'Strategic synthesis', 'Recommendations', 'Budget, ROI and risks']),
+('5', 'Methodology', 'A mixed approach to avoid a purely theoretical answer', ['Literature review', 'Internal diagnosis', 'Existing offers and commercial proposals', 'Four-perspective benchmark', 'Strategic synthesis', 'Recommendations', 'Budget, ROI and execution priorities']),
 ('6', 'Benchmark logic', 'Four perspectives, one commercial question', ['Apave: direct competitor', 'Rockefeller: pedagogical innovation', 'OCP: key account client', 'Axe Capital: B2B sales strategy', 'Criteria: value, barriers, targets, sales tools, lessons']),
 ('7', 'Three offers maturity snapshot', 'Three offers, three commercial maturity levels', ['E-learning: high-value key account potential', 'AR: most accessible short-term lever', 'VR: pedagogically relevant but commercially underactivated']),
 ('8', 'E-learning diagnosis', 'High value, but limited internal scalability', ['Decathlon proposal: EUR 4,500 HT', 'Paris La Defense proposal: EUR 5,720 HT', 'IBM project: EUR 13,560 HT', 'Issue: too dependent on senior sales profiles']),
@@ -36,18 +36,19 @@ slides = [
 ('19', 'Recommendation 2', 'Train salespeople in value-based selling', ['First group of 4 salespeople', '1-day session', 'Demonstrations', 'Objection handling', 'Discovery questionnaire', 'Internal training cost = 4 salespeople x 7 hours x loaded hourly cost']),
 ('20', 'Recommendation 3', 'Launch a 40-client pilot campaign', ['40 priority clients', 'Existing portfolio first', 'Segment by offer relevance', 'Targeted email', 'Phone follow-up', 'Demonstrations / pilot sessions', 'Refusal reasons tracked']),
 ('21', 'Recommendation 4', 'Install a dedicated KPI dashboard', ['Offers presented', 'Demonstrations', 'Quotes issued', 'Quote value', 'Conversion rate', 'Signed revenue', 'Gross margin', 'Average deal value', 'Client satisfaction', 'Refusal reasons']),
-('22', 'Budget and 2025 baseline', 'A proportionate commercial structuring investment', ['Commercial offer portfolio: EUR 1,300-2,000', 'Sales team training: EUR 2,000-3,500', 'Targeted pilot campaign: EUR 1,500-2,300', 'KPI dashboard: EUR 0-500', 'Total direct budget: EUR 4,800-8,300', '2025 baseline: AR EUR 347,705; e-learning EUR 48,974; VR EUR 5,800; total EUR 402,479', 'Direct budget = approximately 1.2% to 2.1% of 2025 signed revenue']),
-('23', 'ROI scenarios and break-even', 'A cautious ROI framework, not a promised result', ['Conservative +5%: EUR 20,124 additional signed revenue', 'Realistic +10%: EUR 40,248 additional signed revenue', 'Ambitious +20%: EUR 80,496 additional signed revenue', 'Break-even margin: conservative 23.9%-41.2%; realistic 11.9%-20.6%; ambitious 6.0%-10.3%', 'ROI must be calculated on additional gross margin, not only revenue']),
-('24', 'Risks, limits and final recommendation', 'Segment. Enable. Pilot. Measure. Scale.', ['Risks: sales adoption, price resistance, VR gadget perception, lack of KPI follow-up, lack of time, weak client response', 'Limits: price sensitivity, client resistance, adoption not guaranteed, VR repositioning, no definitive ROI without margin data', 'Final recommendation: transform existing innovation into structured, measurable and scalable commercial growth drivers'])
+('22', 'Budget and 2025 baseline', 'A complete action budget, including internal time', ['Commercial offer portfolio: EUR 2,000', 'Sales team training: EUR 3,500', 'Targeted pilot campaign: EUR 2,300', 'KPI dashboard: EUR 500', 'Subtotal direct costs: EUR 8,300', 'Internal time: 89 hours x EUR 12.31 = EUR 1,096', 'Total action budget: EUR 9,396']),
+('23', 'ROI scenarios', 'The realistic scenario delivers profitable growth', ['Additional margin = Additional signed revenue x 35%', 'ROI = (Additional margin - EUR 9,396) / EUR 9,396', 'Conservative +5%: revenue EUR 20,124; margin EUR 7,043; ROI -25.0%', 'Realistic +10%: revenue EUR 40,248; margin EUR 14,087; ROI +49.9%', 'Ambitious +20%: revenue EUR 80,496; margin EUR 28,174; ROI +199.9%']),
+('24', 'Final recommendation', 'Final recommendation: structure, activate and scale', ['Fiducial FPSG already has the offers, the credibility and the client base', 'Priority: transform high-value training offers into structured, measurable and profitable growth drivers', 'Segment -> Equip -> Pilot -> Measure -> Scale', 'Success conditions: sales team appropriation, targeted client selection, monthly KPI monitoring']),
+('25', 'Q&A', 'Thank you for listening', ['Ready to answer your questions.'])
 ]
 annexes = [
-('A1', 'Detailed budget table', 'Direct budget detail', ['Offer portfolio: EUR 1,300-2,000', 'Sales training: EUR 2,000-3,500', 'Pilot campaign: EUR 1,500-2,300', 'KPI dashboard: EUR 0-500']),
-('A2', 'Detailed ROI calculation', 'Break-even logic', ['Conservative: 23.9%-41.2%', 'Realistic: 11.9%-20.6%', 'Ambitious: 6.0%-10.3%']),
+('A1', 'Detailed budget table', 'Total action budget detail', ['Offer portfolio: EUR 2,000', 'Sales training: EUR 3,500', 'Pilot campaign: EUR 2,300', 'KPI dashboard: EUR 500', 'Internal time valuation: EUR 1,096', 'Total action budget: EUR 9,396']),
+('A2', 'Detailed ROI calculation', 'Margin-based ROI', ['Additional margin = Additional signed revenue x 35%', 'ROI = (Additional margin - EUR 9,396) / EUR 9,396', 'Realistic +10%: EUR 14,087 margin and +49.9% ROI']),
 ('A3', 'KPI dashboard template', 'Recommended indicators, not actual results', ['Offers presented', 'Demonstrations', 'Quotes', 'Conversion', 'Signed revenue', 'Gross margin', 'Refusal reasons']),
 ('A4', 'Benchmark detailed grid', 'Four complementary perspectives', ['Apave', 'Rockefeller', 'OCP', 'Axe Capital']),
-('A5', 'Potential jury questions', 'Short answers', ['Why these actors?', 'Is ROI guaranteed?', 'Why 40 clients?', 'Why not become a tech provider?']),
+('A5', 'Potential jury questions', 'Short answers', ['Why these actors?', 'How is ROI calculated?', 'Why 40 clients?', 'Why not become a tech provider?']),
 ('A6', 'Offer definitions', 'E-learning / AR / VR', ['E-learning: reusable training asset', 'AR: engaging fire awareness', 'VR: road risk prevention simulation']),
-('A7', 'Oral timing plan', 'Target 34-38 minutes', ['Opening 5-6 min', 'Methodology 3-4 min', 'Diagnosis 10-12 min', 'Benchmark/synthesis 6-7 min', 'Action plan 8-10 min', 'Budget/ROI/risks 8-10 min']),
+('A7', 'Oral timing plan', 'Target 34-38 minutes', ['Opening 5-6 min', 'Methodology 3-4 min', 'Diagnosis 10-12 min', 'Benchmark/synthesis 6-7 min', 'Action plan 8-10 min', 'Budget/ROI/conclusion 8-10 min']),
 ('A8', 'Static backup summary', 'Core message', ['Fiducial FPSG has innovation', 'The priority is commercial structuring', 'Segment -> Enable -> Pilot -> Measure -> Scale'])
 ]
 
@@ -83,7 +84,7 @@ def draw_slide(c, screen, kicker, title, bullets, appendix=False):
     c.drawString(88, H-58, 'FIDUCIAL FPSG')
     c.setFillColor(DEEP)
     c.setFont('Helvetica-Bold', 10)
-    c.drawRightString(W-42, H-54, f'{screen} / 24' if not appendix else str(screen))
+    c.drawRightString(W-42, H-54, f'{screen} / 25' if not appendix else str(screen))
     c.setFillColor(DEEP)
     c.setFont('Helvetica-Bold', 13)
     c.drawString(60, H-115, kicker.upper())
