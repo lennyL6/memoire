@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, ArrowRight, BadgeEuro, BookOpenCheck, BrainCircuit, CalendarDays, CheckCircle2, ClipboardList, Gauge, LineChart, Mail, MessageSquareText, MonitorUp, MousePointer2, NotebookPen, PhoneCall, Presentation, Save, Send, ShieldCheck, SlidersHorizontal, Target, Trash2, Undo2, UsersRound } from 'lucide-react';
 import SlideShell from './components/SlideShell';
 import Navigation from './components/Navigation';
@@ -601,7 +601,7 @@ function PresenterView({
   };
   return (
     <div className="presenter-view h-screen overflow-hidden bg-[#101716] p-4 text-white">
-      <div className="grid h-full gap-4" style={{ gridTemplateColumns: 'minmax(0, 0.62fr) minmax(0, 1.38fr)' }}>
+      <div className="grid h-full gap-4" style={{ gridTemplateColumns: 'minmax(0, 0.95fr) minmax(0, 1.05fr)' }}>
         <section className="flex min-h-0 min-w-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.06] p-4 shadow-2xl">
           <div className="flex shrink-0 items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -614,11 +614,7 @@ function PresenterView({
             <div className="rounded-2xl bg-fiducial-accent px-4 py-2 text-sm font-black text-[#10201b]">{inAnnex ? 'Annex' : 'Main'} {activeIndex + 1}/{activeDeck.length}</div>
           </div>
 
-          <div className="presenter-slide-preview mt-4 flex min-h-0 flex-1 items-center justify-center rounded-[1.2rem] bg-black/25 p-3">
-            <SlideShell slide={activeSlide} total={activeDeck.length} index={activeIndex}>
-              <SlideContent slide={activeSlide} />
-            </SlideShell>
-          </div>
+          <PresenterSlidePreview activeSlide={activeSlide} activeDeck={activeDeck} activeIndex={activeIndex} />
 
           <div className="mt-3 grid shrink-0 grid-cols-[.55fr_.9fr] gap-3">
             <div className="rounded-[1rem] bg-white/[.08] p-3">
@@ -661,6 +657,45 @@ function PresenterView({
             />
           )}
         </section>
+      </div>
+    </div>
+  );
+}
+
+function PresenterSlidePreview({
+  activeSlide,
+  activeDeck,
+  activeIndex
+}: {
+  activeSlide: EditableSlide;
+  activeDeck: EditableSlide[];
+  activeIndex: number;
+}) {
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [scale, setScale] = useState(0.34);
+
+  useLayoutEffect(() => {
+    const node = frameRef.current;
+    if (!node) return;
+    const updateScale = () => {
+      const rect = node.getBoundingClientRect();
+      const nextScale = Math.min(rect.width / 1600, rect.height / 900, 1);
+      setScale(Math.max(0.2, nextScale));
+    };
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={frameRef} className="presenter-slide-preview mt-4 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.2rem] bg-black/25 p-3">
+      <div style={{ width: 1600 * scale, height: 900 * scale }}>
+        <div style={{ width: 1600, height: 900, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+          <SlideShell slide={activeSlide} total={activeDeck.length} index={activeIndex}>
+            <SlideContent slide={activeSlide} />
+          </SlideShell>
+        </div>
       </div>
     </div>
   );
