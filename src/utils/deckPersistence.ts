@@ -6,9 +6,20 @@ export type SlideStyle = {
   bodyScale?: number;
 };
 
+export type TextOverride = {
+  html?: string;
+  fontFamily?: string;
+  fontSize?: string;
+  color?: string;
+  fontWeight?: string;
+  fontStyle?: string;
+  textDecoration?: string;
+};
+
 export type EditableSlide = Slide & {
   deleted?: boolean;
   style?: SlideStyle;
+  textOverrides?: Record<string, TextOverride>;
 };
 
 export type DeckState = {

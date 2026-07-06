@@ -534,3 +534,18 @@ body {
   font-family: var(--slide-font-family);
   font-size: calc(1rem * var(--slide-body-scale, 1));
 }
+
+.presentation-frame [data-text-edit-key] {
+  cursor: text;
+}
+
+.presentation-frame .text-edit-selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: .5rem;
+  box-shadow: 0 0 0 6px rgba(0, 168, 107, .12);
+}
+
+.presentation-frame .text-edit-selected:focus {
+  outline: 3px solid var(--accent);
+}

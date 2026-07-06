@@ -20,7 +20,7 @@ import RiskMatrix from './components/RiskMatrix';
 import FinalQRCode from './components/FinalQRCode';
 import TopicIllustration, { TopicVariant } from './components/TopicIllustration';
 import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, roiScenarios, segmentation, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
-import { DeckState, EditableSlide, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
+import { DeckState, EditableSlide, TextOverride, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
 import { formatEuro } from './utils/format';
 
 export default function App() {
@@ -33,6 +33,8 @@ export default function App() {
   const [deckState, setDeckState] = useState<DeckState>(() => ({ slides: defaultSlides, annexes: defaultAnnexes }));
   const [saveStatus, setSaveStatus] = useState('Chargement…');
   const [editorOpen, setEditorOpen] = useState(false);
+  const [selectedTextKey, setSelectedTextKey] = useState<string | null>(null);
+  const [selectedTextLabel, setSelectedTextLabel] = useState<string | null>(null);
   const slides = useMemo(() => visibleSlides(deckState.slides), [deckState.slides]);
   const annexes = useMemo(() => visibleSlides(deckState.annexes), [deckState.annexes]);
   const [index, setIndex] = useState(Number.isFinite(initialSlide) ? Math.max(0, Math.min(initialSlide, defaultSlides.length - 1)) : 0);
@@ -81,6 +83,29 @@ export default function App() {
     else setIndex((i) => Math.max(0, Math.min(i, slides.length - 2)));
   };
   const restoreAllSlides = () => setDeckState((current) => ({ ...current, slides: current.slides.map((slide) => ({ ...slide, deleted: false })), annexes: current.annexes.map((slide) => ({ ...slide, deleted: false })) }));
+  const updateTextOverride = (key: string, patch: TextOverride) => {
+    updateActiveSlide({ textOverrides: { ...((activeSlide as EditableSlide)?.textOverrides ?? {}), [key]: { ...((activeSlide as EditableSlide)?.textOverrides?.[key] ?? {}), ...patch } } });
+  };
+  const applySelectedTextStyle = (patch: TextOverride) => {
+    if (!selectedTextKey) return;
+    const element = document.querySelector<HTMLElement>(`[data-text-edit-key="${selectedTextKey}"]`);
+    const selection = window.getSelection();
+    if (element && selection && selection.rangeCount > 0 && !selection.isCollapsed && element.contains(selection.anchorNode) && element.contains(selection.focusNode)) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      Object.assign(span.style, patch);
+      try {
+        span.appendChild(range.extractContents());
+        range.insertNode(span);
+        selection.removeAllRanges();
+        updateTextOverride(selectedTextKey, { html: element.innerHTML });
+        return;
+      } catch {
+        // Fall back to block-level styling when the current DOM range cannot be wrapped safely.
+      }
+    }
+    updateTextOverride(selectedTextKey, patch);
+  };
 
   const sendPresenterCommand = (command: 'next' | 'prev' | 'roadmap' | 'annex') => {
     const payload = { type: 'command', command, id: `${Date.now()}-${Math.random().toString(16).slice(2)}` };
@@ -115,6 +140,65 @@ export default function App() {
     }, 700);
     return () => window.clearTimeout(id);
   }, [deckState]);
+
+  useEffect(() => {
+    if (!activeSlide) return;
+    const frame = document.querySelector<HTMLElement>(`.presentation-frame[data-slide-id="${activeSlide.id}"]`);
+    if (!frame) return;
+    const selector = 'h1,h2,h3,h4,p,li,button,span,div';
+    const elements = Array.from(frame.querySelectorAll<HTMLElement>(selector))
+      .filter((element) => element.closest('aside') === null)
+      .filter((element) => element.textContent?.trim())
+      .filter((element) => !element.querySelector('svg,img,canvas'))
+      .filter((element) => element.children.length <= 4);
+
+    const applyOverrides = () => {
+      const overrides = (activeSlide as EditableSlide).textOverrides ?? {};
+      elements.forEach((element, position) => {
+        const key = `${activeSlide.id}:${position}`;
+        const override = overrides[key];
+        element.dataset.textEditKey = key;
+        element.classList.toggle('text-edit-selected', editorOpen && selectedTextKey === key);
+        element.contentEditable = editorOpen && selectedTextKey === key ? 'true' : 'false';
+        if (override?.html && element.innerHTML !== override.html && document.activeElement !== element) element.innerHTML = override.html;
+        element.style.fontFamily = override?.fontFamily ?? '';
+        element.style.fontSize = override?.fontSize ?? '';
+        element.style.color = override?.color ?? '';
+        element.style.fontWeight = override?.fontWeight ?? '';
+        element.style.fontStyle = override?.fontStyle ?? '';
+        element.style.textDecoration = override?.textDecoration ?? '';
+      });
+    };
+    applyOverrides();
+    if (!editorOpen) return;
+
+    const onClick = (event: MouseEvent) => {
+      const target = (event.target as HTMLElement).closest<HTMLElement>(selector);
+      if (!target || !frame.contains(target) || target.closest('aside')) return;
+      const key = target.dataset.textEditKey;
+      if (!key) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setSelectedTextKey(key);
+      setSelectedTextLabel((target.textContent ?? '').trim().slice(0, 80));
+      window.setTimeout(() => target.focus(), 0);
+    };
+    const onInput = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const key = target.dataset.textEditKey;
+      if (key) updateTextOverride(key, { html: target.innerHTML });
+    };
+    frame.addEventListener('click', onClick, true);
+    frame.addEventListener('input', onInput, true);
+    return () => {
+      frame.removeEventListener('click', onClick, true);
+      frame.removeEventListener('input', onInput, true);
+      elements.forEach((element) => {
+        element.contentEditable = 'false';
+        element.classList.remove('text-edit-selected');
+      });
+    };
+  }, [activeSlide, editorOpen, selectedTextKey]);
 
   useEffect(() => {
     if (presenterMode) return;
@@ -238,6 +322,10 @@ export default function App() {
         <SlideEditor
           slide={activeSlide as EditableSlide}
           saveStatus={saveStatus}
+          selectedTextKey={selectedTextKey}
+          selectedTextLabel={selectedTextLabel}
+          onSelectedTextStyle={applySelectedTextStyle}
+          onClearSelectedTextStyle={() => selectedTextKey && updateTextOverride(selectedTextKey, { fontFamily: '', fontSize: '', color: '', fontWeight: '', fontStyle: '', textDecoration: '' })}
           onChange={updateActiveSlide}
           onDelete={deleteActiveSlide}
           onRestoreAll={restoreAllSlides}
@@ -674,7 +762,7 @@ function OfferDiagnosisCard({ title, text }: { title: string; text: string }) { 
 function TimingAnnex() { return <div className="grid h-full grid-cols-3 gap-4">{timingPlan.map((p) => <div key={p.phase} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant="timing" size="sm" className="mb-4" /><div className="text-xs font-black uppercase tracking-[.16em] text-fiducial-deep">Screens {p.screens}</div><div className="mt-3 text-2xl font-black tracking-[-0.04em]">{p.phase}</div><div className="mt-8 rounded-2xl bg-fiducial-deep p-4 text-2xl font-black text-white">{p.duration}</div></div>)}</div>; }
 function SummaryAnnex() { return <div className="grid h-full grid-cols-[1fr_.8fr] gap-5"><div className="deep-card flex flex-col justify-center rounded-[1.8rem] p-8"><TopicIllustration variant="summary" size="xl" tone="deep" className="mb-6 max-w-md" /><div className="text-5xl font-black leading-tight tracking-[-0.06em]">Innovation exists. Commercial scalability must be built.</div><div className="mt-8 text-3xl font-black text-white/75">Segment - Enable - Pilot - Measure - Scale</div></div><div className="glass rounded-[1.5rem] p-5"><TopicIllustration variant="methodology" size="sm" className="mb-4 w-fit" /><div className="kicker">Coherence checklist</div><div className="mt-4 space-y-2 text-sm font-bold leading-tight text-fiducial-anthracite/70">{coherenceChecklist.map((c) => <div key={c}>- {c}</div>)}</div></div></div>; }
 
-function SlideEditor({ slide, saveStatus, onChange, onDelete, onRestoreAll, onClose }: { slide: EditableSlide; saveStatus: string; onChange: (patch: Partial<EditableSlide>) => void; onDelete: () => void; onRestoreAll: () => void; onClose: () => void }) {
+function SlideEditor({ slide, saveStatus, selectedTextKey, selectedTextLabel, onSelectedTextStyle, onClearSelectedTextStyle, onChange, onDelete, onRestoreAll, onClose }: { slide: EditableSlide; saveStatus: string; selectedTextKey: string | null; selectedTextLabel: string | null; onSelectedTextStyle: (patch: TextOverride) => void; onClearSelectedTextStyle: () => void; onChange: (patch: Partial<EditableSlide>) => void; onDelete: () => void; onRestoreAll: () => void; onClose: () => void }) {
   const style = slide.style ?? {};
   const updateStyle = (patch: NonNullable<EditableSlide['style']>) => onChange({ style: { ...style, ...patch } });
   return (
@@ -690,6 +778,34 @@ function SlideEditor({ slide, saveStatus, onChange, onDelete, onRestoreAll, onCl
         <button className="rounded-xl bg-fiducial-light px-3 py-2 text-sm font-black" onClick={onClose}>Fermer</button>
       </div>
       <div className="space-y-4 overflow-auto p-4 text-sm">
+        <div className="rounded-2xl border border-fiducial-deep/15 bg-fiducial-mint/60 p-3">
+          <div className="text-xs font-black uppercase tracking-[.14em] text-fiducial-deep">Mode Canva</div>
+          <p className="mt-1 text-xs font-bold leading-relaxed text-fiducial-anthracite/65">Clique sur un texte directement dans la slide pour modifier seulement ce bloc. Tu peux aussi surligner quelques mots dans le bloc sélectionné puis appliquer un style, comme sur Canva.</p>
+          <div className="mt-3 rounded-xl bg-white/75 p-2 text-xs font-bold text-fiducial-anthracite/70">{selectedTextKey ? `Sélection : ${selectedTextLabel || selectedTextKey}` : 'Aucun texte sélectionné'}</div>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <select className="rounded-xl border border-fiducial-light p-2 text-xs font-bold" disabled={!selectedTextKey} onChange={(e) => onSelectedTextStyle({ fontFamily: e.target.value })} defaultValue="">
+              <option value="">Police du bloc</option>
+              <option value="Inter, system-ui, sans-serif">Inter</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+            </select>
+            <select className="rounded-xl border border-fiducial-light p-2 text-xs font-bold" disabled={!selectedTextKey} onChange={(e) => onSelectedTextStyle({ fontSize: e.target.value })} defaultValue="">
+              <option value="">Taille du bloc</option>
+              <option value="0.85em">Petit</option>
+              <option value="1em">Normal</option>
+              <option value="1.15em">Grand</option>
+              <option value="1.3em">Très grand</option>
+            </select>
+            <input className="h-10 rounded-xl border border-fiducial-light p-1" type="color" disabled={!selectedTextKey} onChange={(e) => onSelectedTextStyle({ color: e.target.value })} title="Couleur du texte sélectionné" />
+            <div className="flex gap-1">
+              <button className="flex-1 rounded-xl bg-white px-2 py-2 text-xs font-black disabled:opacity-40" disabled={!selectedTextKey} onClick={() => onSelectedTextStyle({ fontWeight: '900' })}>B</button>
+              <button className="flex-1 rounded-xl bg-white px-2 py-2 text-xs font-black italic disabled:opacity-40" disabled={!selectedTextKey} onClick={() => onSelectedTextStyle({ fontStyle: 'italic' })}>I</button>
+              <button className="flex-1 rounded-xl bg-white px-2 py-2 text-xs font-black underline disabled:opacity-40" disabled={!selectedTextKey} onClick={() => onSelectedTextStyle({ textDecoration: 'underline' })}>U</button>
+            </div>
+          </div>
+          <button className="mt-2 w-full rounded-xl bg-fiducial-light px-3 py-2 text-xs font-black disabled:opacity-40" disabled={!selectedTextKey} onClick={onClearSelectedTextStyle}>Réinitialiser le style du bloc</button>
+        </div>
         <label className="block font-black">Surtitre
           <input className="mt-1 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={slide.eyebrow ?? ''} onChange={(e) => onChange({ eyebrow: e.target.value })} />
         </label>

@@ -20,6 +20,7 @@ export default function SlideShell({ slide, total, index, isPrint = false, child
   return (
     <motion.section
       style={cssVars}
+      data-slide-id={slide.id}
       className="presentation-frame relative aspect-video w-full max-w-[1600px] overflow-hidden rounded-[2rem] border border-white/70 bg-fiducial-offwhite shadow-soft"
       initial={isPrint ? false : { opacity: 0, y: 18, scale: 0.992 }}
       animate={isPrint ? undefined : { opacity: 1, y: 0, scale: 1 }}
