@@ -16,8 +16,6 @@ import BudgetChart from './components/BudgetChart';
 import RoiScenarioChart from './components/RoiScenarioChart';
 import Timeline3D from './components/Timeline3D';
 import KpiDashboard from './components/KpiDashboard';
-import RiskMatrix from './components/RiskMatrix';
-import FinalQRCode from './components/FinalQRCode';
 import TopicIllustration, { TopicVariant } from './components/TopicIllustration';
 import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, roiScenarios, segmentation, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
 import { DeckState, EditableSlide, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
@@ -618,18 +616,45 @@ function PresenterBlock({ label, text, large = false }: { label: string; text: s
 }
 
 function Final({ slide }: { slide: Slide }) {
-  const data = slide.data as { risks: string[]; limits: string[]; conclusion: string };
+  const data = slide.data as { path: string[]; successConditions: string[]; conclusion: string; finalMessage: string };
   return (
-    <div className="grid h-full grid-cols-[1.35fr_.65fr] gap-5">
-      <div className="grid grid-rows-[1fr_auto] gap-4">
-        <RiskMatrix />
-        <div className="deep-card rounded-[1.5rem] p-5 text-2xl font-black leading-tight tracking-[-0.04em]">{data.conclusion}</div>
+    <div className="grid h-full grid-cols-[1.15fr_.85fr] gap-4">
+      <div className="deep-card flex flex-col justify-between rounded-[1.7rem] p-4">
+        <div>
+          <TopicIllustration variant="summary" size="xs" tone="deep" className="mb-3 w-fit" />
+          <p className="text-[1.45rem] font-black leading-tight tracking-[-0.03em] text-white">{data.conclusion}</p>
+        </div>
+        <div className="mt-3 grid grid-cols-5 gap-1.5">
+          {data.path.map((step, index) => (
+            <div key={step} className="flex items-center gap-1.5">
+              <div className="flex min-h-10 flex-1 items-center justify-center rounded-xl bg-white/[.12] px-2 text-center text-[11px] font-black uppercase tracking-[.08em] text-white">{step}</div>
+              {index < data.path.length - 1 && <ArrowRight size={14} className="shrink-0 text-fiducial-accent" />}
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 rounded-2xl bg-fiducial-accent p-3 text-lg font-black leading-tight tracking-[-0.02em] text-[#10201b]">{data.finalMessage}</div>
       </div>
-      <div className="grid gap-4">
-        <FinalQRCode />
-        <div className="glass rounded-[1.5rem] p-5">
-          <div className="kicker">Critical limits</div>
-          <div className="mt-3 space-y-2 text-sm font-bold leading-snug text-fiducial-anthracite/70">{data.limits.map((l) => <div key={l}>- {l}</div>)}</div>
+      <div className="grid grid-rows-[auto_1fr] gap-3">
+        <div className="glass rounded-[1.5rem] p-4">
+          <div className="flex items-center gap-3">
+            <Target className="text-fiducial-deep" size={28} />
+            <div>
+              <div className="kicker">Decision path</div>
+              <div className="mt-1 text-2xl font-black tracking-[-0.04em] text-fiducial-deep">Structure, activate, scale</div>
+            </div>
+          </div>
+          <p className="mt-3 rounded-2xl bg-white/75 p-3 text-xs font-bold leading-relaxed text-fiducial-anthracite/70">Existing offers become a managed commercial growth engine through sequenced execution and monthly value monitoring.</p>
+        </div>
+        <div className="glass rounded-[1.5rem] p-4">
+          <div className="kicker">Success conditions</div>
+          <div className="mt-3 grid gap-2">
+            {data.successConditions.map((condition) => (
+              <div key={condition} className="flex items-center gap-3 rounded-2xl bg-white/75 p-2.5 text-sm font-black text-fiducial-anthracite">
+                <CheckCircle2 className="shrink-0 text-fiducial-deep" size={22} />
+                <span>{condition}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -650,15 +675,15 @@ function AnnexContent({ slide }: { slide: Slide }) {
 
 function BudgetAnnex() {
   const variants: TopicVariant[] = ['portfolio', 'training', 'pilot', 'kpi'];
-  return <div className="grid h-full grid-cols-4 gap-4">{budgetItems.map((item, i) => <div key={item.name} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant={variants[i] ?? 'budget'} size="md" className="mb-4" /><div className="text-xl font-black tracking-[-0.04em]">{item.name}</div><div className="mt-8 text-3xl font-black text-fiducial-deep">{formatEuro(item.min)} - {formatEuro(item.max)}</div></div>)}<div className="deep-card col-span-4 rounded-[1.5rem] p-6 text-4xl font-black tracking-[-0.06em]"><TopicIllustration variant="budget" size="sm" tone="deep" className="mb-4 w-fit" />Total direct budget: {formatEuro(financialBaseline.budgetMin)} - {formatEuro(financialBaseline.budgetMax)}</div></div>;
+  return <div className="grid h-full grid-cols-4 gap-4">{budgetItems.map((item, i) => <div key={item.name} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant={variants[i] ?? 'budget'} size="md" className="mb-4" /><div className="text-xl font-black tracking-[-0.04em]">{item.name}</div><div className="mt-8 text-3xl font-black text-fiducial-deep">{formatEuro(item.directCost)}</div></div>)}<div className="glass col-span-2 rounded-[1.5rem] p-6"><div className="kicker">Internal time valuation</div><div className="mt-3 text-3xl font-black text-fiducial-deep">{financialBaseline.internalHours}h x €{financialBaseline.internalHourlyRate.toFixed(2)} = {formatEuro(financialBaseline.internalTimeCost)}</div></div><div className="deep-card col-span-2 rounded-[1.5rem] p-6 text-4xl font-black tracking-[-0.06em]"><TopicIllustration variant="budget" size="sm" tone="deep" className="mb-4 w-fit" />Total action budget: {formatEuro(financialBaseline.budgetTotal)}</div></div>;
 }
 function RoiAnnex() {
-  return <div className="grid h-full grid-cols-3 gap-4">{roiScenarios.map((s) => <div key={s.name} className="glass rounded-[1.5rem] p-6"><TopicIllustration variant={s.name === 'Conservative' ? 'risk' : s.name === 'Realistic' ? 'conversion' : 'revenue'} size="lg" className="mb-5" /><div className="text-2xl font-black">{s.name} {s.growth}</div><div className="mt-6 text-4xl font-black text-fiducial-deep">{formatEuro(s.additionalRevenue)}</div><div className="mt-4 rounded-2xl bg-fiducial-mint p-4 text-sm font-bold">Break-even margin: {s.breakEvenMin}% - {s.breakEvenMax}%</div></div>)}</div>;
+  return <div className="grid h-full grid-cols-3 gap-4">{roiScenarios.map((s) => <div key={s.name} className={s.name === 'Realistic' ? 'deep-card rounded-[1.5rem] p-6' : 'glass rounded-[1.5rem] p-6'}><TopicIllustration variant={s.name === 'Conservative' ? 'risk' : s.name === 'Realistic' ? 'conversion' : 'revenue'} size="lg" tone={s.name === 'Realistic' ? 'deep' : 'light'} className="mb-5" /><div className="text-2xl font-black">{s.name} {s.growth}</div><div className={s.name === 'Realistic' ? 'mt-6 text-3xl font-black text-white' : 'mt-6 text-3xl font-black text-fiducial-deep'}>{formatEuro(s.additionalRevenue)}</div><div className={s.name === 'Realistic' ? 'mt-3 text-xl font-black text-white/80' : 'mt-3 text-xl font-black text-fiducial-anthracite/70'}>Margin: {formatEuro(s.additionalMargin)}</div><div className={s.name === 'Realistic' ? 'mt-4 rounded-2xl bg-fiducial-accent p-4 text-xl font-black text-[#10201b]' : 'mt-4 rounded-2xl bg-fiducial-mint p-4 text-xl font-black text-fiducial-deep'}>ROI: {s.roi > 0 ? '+' : ''}{s.roi.toFixed(1)}%</div></div>)}</div>;
 }
 function QuestionsAnnex() {
   const qs = [
     ['Why these benchmark actors?', 'They cover competitor, pedagogy, key account client and B2B sales perspectives.'],
-    ['Is ROI guaranteed?', 'No. It is a framework based on additional signed revenue and break-even margin logic.'],
+    ['How is ROI calculated?', 'On additional margin: additional signed revenue multiplied by 35%, then compared with the €9,396 action budget.'],
     ['Why 40 clients?', 'Enough to generate feedback, limited enough to remain manageable.'],
     ['Why not become a tech provider?', 'Fiducial FPSG’s credibility is safety training expertise; technology is a lever.'],
     ['Are the KPIs real results?', 'No. They are recommended monitoring indicators.']
