@@ -108,7 +108,7 @@ export default function App() {
     if (!deckLoaded.current) return;
     const id = window.setTimeout(() => {
       saveDeckState(deckState)
-        .then(() => setSaveStatus(`Sauvegardé serveur à ${new Date().toLocaleTimeString()}`))
+        .then(() => setSaveStatus(`Sauvegardé à ${new Date().toLocaleTimeString()}`))
         .catch(() => setSaveStatus('Sauvegarde serveur impossible'));
     }, 700);
     return () => window.clearTimeout(id);
@@ -159,6 +159,9 @@ export default function App() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isEditing = target?.tagName === 'TEXTAREA' || target?.tagName === 'INPUT' || target?.isContentEditable;
+      if (isEditing) return;
       if (presenterMode) {
         if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); sendPresenterCommand('next'); }
         if (e.key === 'ArrowLeft') sendPresenterCommand('prev');
@@ -190,6 +193,8 @@ export default function App() {
         activeDeck={activeDeck}
         inAnnex={inAnnex}
         sendCommand={sendPresenterCommand}
+        onChangeSlide={updateActiveSlide}
+        saveStatus={saveStatus}
       />
     );
   }
@@ -273,9 +278,20 @@ function SlideContent({ slide }: { slide: Slide }) {
     case 'budget': return <BudgetChart />;
     case 'roi': return <RoiScenarioChart />;
     case 'risksFinal': return <Final slide={slide} />;
+    case 'thankYou': return <ThankYou />;
     case 'annex': return <AnnexContent slide={slide} />;
     default: return null;
   }
+}
+
+function ThankYou() {
+  return (
+    <div className="deep-card flex h-full flex-col items-center justify-center rounded-[1.8rem] p-10 text-center">
+      <TopicIllustration variant="summary" size="lg" tone="deep" className="mb-8" />
+      <div className="text-[clamp(3rem,6vw,7rem)] font-black leading-none tracking-[-0.06em] text-white">Thank you for listening</div>
+      <div className="mt-8 rounded-3xl bg-white/15 px-8 py-5 text-[clamp(1.5rem,2.2vw,2.7rem)] font-black tracking-[-0.04em] text-white">Ready to answer your questions.</div>
+    </div>
+  );
 }
 
 function Opening({ slide }: { slide: Slide }) {
@@ -536,12 +552,32 @@ function Pilot({ slide }: { slide: Slide }) {
   );
 }
 
-function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendCommand }: { activeSlide: Slide; activeIndex: number; activeDeck: Slide[]; inAnnex: boolean; sendCommand: (command: 'next' | 'prev' | 'roadmap' | 'annex') => void }) {
+function PresenterView({
+  activeSlide,
+  activeIndex,
+  activeDeck,
+  inAnnex,
+  sendCommand,
+  onChangeSlide,
+  saveStatus
+}: {
+  activeSlide: EditableSlide;
+  activeIndex: number;
+  activeDeck: EditableSlide[];
+  inAnnex: boolean;
+  sendCommand: (command: 'next' | 'prev' | 'roadmap' | 'annex') => void;
+  onChangeSlide: (patch: Partial<EditableSlide>) => void;
+  saveStatus: string;
+}) {
   const [seconds, setSeconds] = useState(0);
+  const [script, setScript] = useState(activeSlide.presenterScript ?? getPresenterScriptEN(activeSlide));
   useEffect(() => {
     const id = window.setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => window.clearInterval(id);
   }, []);
+  useEffect(() => {
+    setScript(activeSlide.presenterScript ?? getPresenterScriptEN(activeSlide));
+  }, [activeSlide.id, activeSlide.presenterScript]);
   const label = useMemo(() => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
@@ -549,68 +585,70 @@ function PresenterView({ activeSlide, activeIndex, activeDeck, inAnnex, sendComm
   }, [seconds]);
   const nextSlide = activeDeck[Math.min(activeDeck.length - 1, activeIndex + 1)];
   const progress = ((activeIndex + 1) / activeDeck.length) * 100;
+  const updateScript = (value: string) => {
+    setScript(value);
+    onChangeSlide({ presenterScript: value });
+  };
   return (
-    <div className="presenter-view min-h-screen overflow-auto bg-[#101716] p-6 text-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-[.9fr_1.1fr] gap-5">
-        <section className="rounded-[1.5rem] border border-white/10 bg-white/[.06] p-6 shadow-2xl">
-          <div className="flex items-center justify-between">
+    <div className="presenter-view h-screen overflow-hidden bg-[#101716] p-4 text-white">
+      <div className="grid h-full grid-cols-[1.35fr_.85fr] gap-4">
+        <section className="flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.06] p-4 shadow-2xl">
+          <div className="flex shrink-0 items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <MonitorUp className="text-fiducial-accent" />
               <div>
                 <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Private presenter view</div>
-                <div className="text-sm font-semibold text-white/52">Not shown on the presentation screen</div>
+                <div className="text-sm font-semibold text-white/52">Live slide preview and controls</div>
               </div>
             </div>
             <div className="rounded-2xl bg-fiducial-accent px-4 py-2 text-sm font-black text-[#10201b]">{inAnnex ? 'Annex' : 'Main'} {activeIndex + 1}/{activeDeck.length}</div>
           </div>
 
-          <div className="mt-8 rounded-[1.4rem] bg-white p-5 text-fiducial-anthracite">
-            <div className="kicker">{activeSlide.eyebrow ?? 'Current slide'}</div>
-            <h1 className="mt-3 text-4xl font-black leading-tight tracking-[-0.06em]">{activeSlide.title}</h1>
-            {activeSlide.subtitle && <p className="mt-3 text-lg font-semibold text-fiducial-anthracite/62">{activeSlide.subtitle}</p>}
-            <div className="mt-6 h-2 overflow-hidden rounded-full bg-fiducial-light">
-              <div className="h-full rounded-full bg-fiducial-deep" style={{ width: `${progress}%` }} />
+          <div className="presenter-slide-preview mt-4 flex min-h-0 flex-1 items-center justify-center rounded-[1.2rem] bg-black/25 p-3">
+            <SlideShell slide={activeSlide} total={activeDeck.length} index={activeIndex}>
+              <SlideContent slide={activeSlide} />
+            </SlideShell>
+          </div>
+
+          <div className="mt-3 grid shrink-0 grid-cols-[.55fr_.9fr] gap-3">
+            <div className="rounded-[1rem] bg-white/[.08] p-3">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.16em] text-fiducial-accent"><CalendarDays size={14} /> Timer</div>
+              <div className="mt-1 text-3xl font-black tracking-[-0.05em]">{label}</div>
+              <button className="mt-2 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-black text-white/75 hover:bg-white/16" onClick={() => setSeconds(0)}>Reset</button>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_1.35fr] gap-2">
+              <button className="rounded-xl bg-white px-3 py-3 text-xs font-black text-fiducial-anthracite" onClick={() => sendCommand('prev')}>Previous slide</button>
+              <button className="rounded-xl bg-fiducial-accent px-3 py-3 text-xs font-black text-[#10201b]" onClick={() => sendCommand('next')}>Next slide</button>
+              <div className="rounded-xl bg-white/[.08] p-3">
+                <div className="text-[10px] font-black uppercase tracking-[.16em] text-fiducial-accent">Next</div>
+                <div className="mt-1 line-clamp-2 text-sm font-black leading-tight tracking-[-0.02em]">{nextSlide.title}</div>
+              </div>
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-4">
-            <div className="rounded-[1.4rem] bg-white/[.08] p-5">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[.18em] text-fiducial-accent"><CalendarDays size={16} /> Timer</div>
-              <div className="mt-3 text-6xl font-black tracking-[-0.06em]">{label}</div>
-              <button className="mt-4 rounded-xl bg-white/10 px-4 py-2 text-sm font-black text-white/75 hover:bg-white/16" onClick={() => setSeconds(0)}>Reset timer</button>
+          <div className="mt-3 flex shrink-0 items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-fiducial-accent" style={{ width: `${progress}%` }} />
             </div>
-            <div className="rounded-[1.4rem] bg-white/[.08] p-5">
-              <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Next</div>
-              <div className="mt-3 text-2xl font-black leading-tight tracking-[-0.04em]">{nextSlide.title}</div>
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-3">
-            <button className="rounded-2xl bg-white px-5 py-3 text-sm font-black text-fiducial-anthracite" onClick={() => sendCommand('prev')}>Previous</button>
-            <button className="rounded-2xl bg-fiducial-accent px-5 py-3 text-sm font-black text-[#10201b]" onClick={() => sendCommand('next')}>Next slide</button>
-            <button className="rounded-2xl bg-white/10 px-5 py-3 text-sm font-black text-white" onClick={() => sendCommand('roadmap')}>Roadmap</button>
-            <button className="rounded-2xl bg-white/10 px-5 py-3 text-sm font-black text-white" onClick={() => sendCommand('annex')}>Annexes</button>
+            <button className="rounded-xl bg-white/10 px-3 py-2 text-xs font-black text-white" onClick={() => sendCommand('roadmap')}>Roadmap</button>
+            <button className="rounded-xl bg-white/10 px-3 py-2 text-xs font-black text-white" onClick={() => sendCommand('annex')}>Annexes</button>
           </div>
         </section>
 
-        <section className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-6 shadow-2xl">
-          <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral notes</div>
-          <h2 className="mt-2 text-3xl font-black tracking-[-0.05em]">{activeSlide.note.title}</h2>
-          <div className="mt-5 grid gap-4">
-            <PresenterBlock label="Recommended timing" text={activeSlide.note.duration} />
-            <PresenterBlock label="Oral script" text={getPresenterScriptEN(activeSlide)} large />
+        <section className="flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.08] p-5 shadow-2xl">
+          <div className="shrink-0">
+            <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral script</div>
+            <h2 className="mt-2 text-3xl font-black tracking-[-0.05em]">{activeSlide.note.title}</h2>
+            <div className="mt-2 text-xs font-bold text-white/48">{saveStatus}</div>
           </div>
+          <textarea
+            className="mt-4 min-h-0 flex-1 resize-none rounded-[1.2rem] border border-white/10 bg-[#0b1110] p-5 text-xl font-semibold leading-relaxed text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
+            value={script}
+            onChange={(event) => updateScript(event.target.value)}
+            spellCheck={false}
+          />
         </section>
       </div>
-    </div>
-  );
-}
-
-function PresenterBlock({ label, text, large = false }: { label: string; text: string; large?: boolean }) {
-  return (
-    <div className="rounded-2xl bg-white/[.08] p-4">
-      <div className="text-xs font-black uppercase tracking-[.16em] text-fiducial-accent">{label}</div>
-      <p className={large ? 'mt-2 whitespace-pre-line text-lg font-semibold leading-relaxed text-white/86' : 'mt-2 whitespace-pre-line text-base font-semibold leading-relaxed text-white/74'}>{text}</p>
     </div>
   );
 }
@@ -632,25 +670,25 @@ function Final({ slide }: { slide: Slide }) {
             </div>
           ))}
         </div>
-        <div className="mt-3 rounded-2xl bg-fiducial-accent p-3 text-lg font-black leading-tight tracking-[-0.02em] text-[#10201b]">{data.finalMessage}</div>
+        <div className="mt-3 rounded-2xl bg-fiducial-accent p-3 text-lg font-black leading-tight tracking-[-0.02em] text-white">{data.finalMessage}</div>
       </div>
       <div className="grid grid-rows-[auto_1fr] gap-3">
-        <div className="glass rounded-[1.5rem] p-4">
+        <div className="deep-card rounded-[1.5rem] p-4">
           <div className="flex items-center gap-3">
-            <Target className="text-fiducial-deep" size={28} />
+            <Target className="text-white" size={28} />
             <div>
-              <div className="kicker">Decision path</div>
-              <div className="mt-1 text-2xl font-black tracking-[-0.04em] text-fiducial-deep">Structure, activate, scale</div>
+              <div className="text-xs font-black uppercase tracking-[.18em] text-white/70">Decision path</div>
+              <div className="mt-1 text-2xl font-black tracking-[-0.04em] text-white">Structure, activate, scale</div>
             </div>
           </div>
-          <p className="mt-3 rounded-2xl bg-white/75 p-3 text-xs font-bold leading-relaxed text-fiducial-anthracite/70">Existing offers become a managed commercial growth engine through sequenced execution and monthly value monitoring.</p>
+          <p className="mt-3 rounded-2xl bg-white/15 p-3 text-xs font-bold leading-relaxed text-white/82">Existing offers become a managed commercial growth engine through sequenced execution and monthly value monitoring.</p>
         </div>
-        <div className="glass rounded-[1.5rem] p-4">
-          <div className="kicker">Success conditions</div>
+        <div className="deep-card rounded-[1.5rem] p-4">
+          <div className="text-xs font-black uppercase tracking-[.18em] text-white/70">Success conditions</div>
           <div className="mt-3 grid gap-2">
             {data.successConditions.map((condition) => (
-              <div key={condition} className="flex items-center gap-3 rounded-2xl bg-white/75 p-2.5 text-sm font-black text-fiducial-anthracite">
-                <CheckCircle2 className="shrink-0 text-fiducial-deep" size={22} />
+              <div key={condition} className="flex items-center gap-3 rounded-2xl bg-white/15 p-2.5 text-sm font-black text-white">
+                <CheckCircle2 className="shrink-0 text-white" size={22} />
                 <span>{condition}</span>
               </div>
             ))}

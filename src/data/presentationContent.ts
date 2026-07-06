@@ -23,6 +23,7 @@ export type SlideKind =
   | 'budget'
   | 'roi'
   | 'risksFinal'
+  | 'thankYou'
   | 'annex';
 
 export type Note = {
@@ -317,6 +318,10 @@ export const slides: Slide[] = [
     id: 'risks-final', screen: 24, eyebrow: 'Final recommendation', title: 'Final recommendation: structure, activate and scale', kind: 'risksFinal',
     data: { path: ['Segment','Equip','Pilot','Measure','Scale'], successConditions: ['Sales team appropriation','Targeted client selection','Monthly KPI monitoring'], conclusion: 'Fiducial FPSG already has the offers, the credibility and the client base. The priority is now to transform high-value training offers into structured, measurable and profitable commercial growth drivers.', finalMessage: 'By structuring the go-to-market approach, Fiducial FPSG can turn existing innovation into profitable commercial scalability.' },
     note: notes('risks-final','Final recommendation','Terminer sur une recommandation positive, décisionnelle et rentable.','2 min 30','Pour conclure, Fiducial FPSG n’a pas besoin de créer une nouvelle innovation. L’entreprise dispose déjà des offres, de la crédibilité et de la base client. L’enjeu est de mieux structurer la commercialisation des offres existantes. Le plan est réaliste, mesurable et rentable dès le scénario réaliste. Les priorités d’exécution sont claires : segmentation, appropriation commerciale, pilote client et suivi mensuel des KPI.','By structuring the go-to-market approach, Fiducial FPSG can turn existing innovation into profitable commercial scalability.','Le jury peut demander quelle décision prendre après la soutenance.','Lancer le plan en séquence : segmenter, équiper les commerciaux, piloter sur 40 clients, mesurer mensuellement, puis scaler.')
+  },
+  {
+    id: 'thank-you', screen: 25, eyebrow: 'Q&A', title: 'Thank you for listening', subtitle: 'Ready to answer your questions.', kind: 'thankYou',
+    note: notes('thank-you','Thank you','Clore proprement et ouvrir la discussion avec le jury.','30 sec','Merci pour votre attention. Je suis maintenant prêt à répondre à vos questions.','Ready to answer your questions.','Le jury peut démarrer directement sur une question financière ou opérationnelle.','Revenir calmement aux chiffres clés, au plan d’action et à la logique de scalabilité.')
   }
 ];
 
@@ -381,6 +386,7 @@ export const presenterScriptsEN: Record<string, string> = {
   'budget-baseline': `The action budget is now presented as one clear figure: 9,396 euros. It includes 8,300 euros of direct costs for the commercial offer portfolio, sales training, the targeted pilot campaign and the KPI dashboard. It also includes internal time valuation: 89 estimated internal hours at 12.31 euros per hour, rounded to 1,096 euros. This makes the financial analysis more complete and more professional because it values the real effort required to execute the plan.`,
   'roi-break-even': `The ROI calculation uses the total action budget of 9,396 euros and a gross margin rate of 35 percent. The important point is that ROI is calculated on additional margin, not on additional revenue. The conservative scenario at plus 5 percent generates 7,043 euros of additional margin and remains negative. The realistic scenario at plus 10 percent generates 14,087 euros of additional margin and reaches a positive ROI of plus 49.9 percent. The ambitious scenario at plus 20 percent shows the scalability potential, with 28,174 euros of additional margin and plus 199.9 percent ROI.`,
   'risks-final': `To conclude, Fiducial FPSG already has the offers, the credibility and the client base. The recommendation is therefore not to create another innovation, but to structure the go-to-market approach around a clear sequence: segment, equip, pilot, measure and scale. The action plan is realistic because it starts from existing offers. It is measurable because it includes monthly KPIs. And it is financially defensible because the realistic scenario already generates a positive ROI with internal time included.`,
+  'thank-you': `Thank you for listening. I am ready to answer your questions.`,
   'a1-budget': `This annex supports the budget discussion. The total action budget is 9,396 euros. It includes 8,300 euros of direct costs and 1,096 euros of internal time valuation. The direct costs cover the commercial offer portfolio, sales training, the pilot campaign and the KPI dashboard. The internal time is based on 89 estimated hours valued at 12.31 euros per hour.`,
   'a2-roi': `This annex supports the ROI calculation. The formula is clear: additional margin equals additional signed revenue multiplied by 35 percent. ROI equals additional margin minus 9,396 euros, divided by 9,396 euros. At plus 10 percent additional signed revenue, the plan generates 14,087 euros of additional margin and becomes financially profitable with a plus 49.9 percent ROI.`,
   'a3-kpi-template': `This annex shows the recommended dashboard logic. I would use it to explain that the KPIs measure activation before final sales performance. At the beginning, offers presented, demonstrations and quotes issued are especially important because they reveal whether the sales force is actually using the offer portfolio. Refusal reasons are also strategic because they help adjust the pitch and targeting.`,
@@ -455,7 +461,7 @@ I should specify that the existing portfolio comes first because these clients a
   'rec-kpi': `For recommendation four, I should make clear that KPIs are not administrative decoration. They are the mechanism that transforms isolated opportunities into a managed commercial priority. Without a dashboard, Fiducial FPSG may know that some offers exist, but not whether they are actually presented, demonstrated, quoted and converted.
 
 The dashboard should track offers presented, demonstrations, quotes issued, quote value, conversion rate, signed revenue, gross margin, average deal value, satisfaction and refusal reasons. I must say that these are recommended KPIs, not existing results. At the beginning, the most useful indicators are activation indicators: offers presented, demos and quotes. Later, the company can focus more on conversion, margin and scaling decisions.`,
-  'budget-baseline': `On the budget slide, I should be precise and affirmative. I have retained one budget to defend: 9,396 euros. It includes 8,300 euros of direct costs and 1,096 euros of internal time valuation. The internal time corresponds to 89 estimated hours valued at 12.31 euros gross per hour.
+  'budget-baseline': `On the budget slide, I should be precise and affirmative. I have retained one clear action budget: 9,396 euros. It includes 8,300 euros of direct costs and 1,096 euros of internal time valuation. The internal time corresponds to 89 estimated hours valued at 12.31 euros gross per hour.
 
 I should explain that this is a prudent budget because it does not finance the creation of a new innovation. It finances commercial structuring: offer portfolio, sales training, targeted pilot campaign and KPI dashboard. By including internal time, the analysis becomes more complete and more professional. The key sentence is simple: the total action budget is 9,396 euros, including direct costs and internal time.`,
   'roi-break-even': `For ROI, I should be clear that the gross margin used for the calculation is 35 percent. The ROI is calculated on additional margin, not on signed revenue. The formula is: additional margin equals additional signed revenue multiplied by 35 percent, and ROI equals additional margin minus 9,396 euros, divided by 9,396 euros.
@@ -464,6 +470,9 @@ Then I can walk through the three scenarios. The conservative scenario at plus 5
   'risks-final': `For the conclusion, I should end on a decision-oriented recommendation. Fiducial FPSG does not need to create a new innovation. The company already has the offers, the credibility and the client base. The priority is to structure the commercialization of existing offers.
 
 I should connect the final path to the whole defense: segment the right clients, equip the sales force, pilot with targeted clients, measure with monthly KPIs, then scale. The plan is realistic because it starts from current assets. It is measurable because it gives management indicators. It is profitable from the realistic scenario, with a ROI of +49.9 percent. The execution priorities are segmentation, sales team appropriation, client pilot and KPI monitoring. I should finish with the final message: by structuring the go-to-market approach, Fiducial FPSG can turn existing innovation into profitable commercial scalability.`,
+  'thank-you': `I should keep this slide very simple. I thank the jury for listening, then open the discussion confidently.
+
+If the first question is financial, I should come back to the 9,396 euro action budget, the 35 percent gross margin used for ROI, and the realistic scenario at +49.9 percent. If the question is operational, I should return to the sequence: segment, equip, pilot, measure and scale.`,
   'a1-budget': `If I open this annex, I should use it only to answer a budget question. I can say that the total action budget is 9,396 euros: 8,300 euros of direct costs plus 1,096 euros of internal time valuation.
 
 The direct costs are 2,000 euros for the commercial offer portfolio, 3,500 euros for sales team training, 2,300 euros for the targeted pilot campaign and 500 euros for the KPI dashboard. The internal time is based on 89 estimated hours valued at 12.31 euros per hour. This makes the budget complete and easy to defend.`,
@@ -502,7 +511,7 @@ export const timingPlan = [
   { phase: 'Diagnosis', screens: '7-12', duration: '10-12 min' },
   { phase: 'Benchmark / synthesis', screens: '13-16', duration: '6-7 min' },
   { phase: 'Action plan', screens: '17-21', duration: '8-10 min' },
-  { phase: 'Budget / ROI / conclusion', screens: '22-24', duration: '8-10 min' }
+  { phase: 'Budget / ROI / conclusion', screens: '22-25', duration: '8-10 min' }
 ];
 
 export const coherenceChecklist = [

@@ -67,7 +67,7 @@ const panels: Record<Variant, {
     label: 'Decision view',
     title: 'Evidence → recommendation → control',
     steps: ['Evidence', 'Choice', 'Action', 'KPI'],
-    footer: 'A sober visual support for the oral narrative.',
+    footer: '',
     illustration: 'summary'
   }
 };
@@ -75,6 +75,7 @@ const panels: Record<Variant, {
 export default function ThreeScene({ variant = 'generic', compact = false }: Props) {
   const panel = panels[variant];
   const dense = variant === 'opening' || variant === 'tunnel';
+  const noFooter = !dense && !panel.footer;
   return (
     <div className="strategic-visual glass flex h-full min-h-[260px] flex-col justify-between overflow-hidden rounded-[1.5rem] p-4">
       <div>
@@ -85,18 +86,18 @@ export default function ThreeScene({ variant = 'generic', compact = false }: Pro
         </h3>
       </div>
 
-      <div className={compact ? 'mt-5 grid grid-cols-3 gap-3' : dense ? 'mt-4 grid grid-cols-2 gap-2' : 'mt-6 space-y-2.5'}>
+      <div className={compact ? 'mt-5 grid grid-cols-3 gap-3' : dense || noFooter ? 'mt-4 grid grid-cols-2 gap-2' : 'mt-6 space-y-2.5'}>
         {panel.steps.map((step, index) => (
-          <div key={step} className={`${dense ? 'p-2' : 'p-3'} flex items-center gap-2 rounded-2xl border border-fiducial-deep/10 bg-white/72 shadow-sm`}>
-            <span className={`${dense ? 'h-7 w-7' : 'h-8 w-8'} flex shrink-0 items-center justify-center rounded-xl bg-fiducial-deep text-xs font-black text-white`}>
+          <div key={step} className={`${dense || noFooter ? 'p-2' : 'p-3'} flex items-center gap-2 rounded-2xl border border-fiducial-deep/10 bg-white/72 shadow-sm`}>
+            <span className={`${dense || noFooter ? 'h-7 w-7' : 'h-8 w-8'} flex shrink-0 items-center justify-center rounded-xl bg-fiducial-deep text-xs font-black text-white`}>
               {index + 1}
             </span>
-            <span className={`${dense ? 'text-xs' : 'text-sm'} font-black leading-tight text-fiducial-anthracite`}>{step}</span>
+            <span className={`${dense || noFooter ? 'text-xs' : 'text-sm'} font-black leading-tight text-fiducial-anthracite`}>{step}</span>
           </div>
         ))}
       </div>
 
-      {!dense && (
+      {!dense && panel.footer && (
         <div className="mt-4 rounded-2xl bg-fiducial-mint/75 p-3 text-sm font-semibold leading-relaxed text-fiducial-anthracite/72">
           {panel.footer}
         </div>
