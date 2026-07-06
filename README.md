@@ -131,8 +131,8 @@ Main presentation: 24 screens.
 20. Recommendation 3 - 40-client pilot campaign  
 21. Recommendation 4 - KPI dashboard  
 22. Budget and 2025 baseline  
-23. ROI scenarios and break-even  
-24. Risks, limits and final recommendation
+23. ROI scenarios  
+24. Final recommendation
 
 Annexes:
 
@@ -284,5 +284,5 @@ The presentation is built around the dissertation logic:
 - The issue is commercial structuring and scalability.
 - Fiducial FPSG should not become a technology provider.
 - Fiducial FPSG should remain a safety training expert using digital and immersive solutions as commercial and pedagogical levers.
-- ROI is shown as a decision-making framework, not as a guaranteed result.
+- ROI is calculated on additional margin, using a 35% gross margin rate and the €9,396 total action budget.
 - KPI dashboard values are recommended indicators, not actual results.
