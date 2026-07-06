@@ -17,7 +17,7 @@ import RoiScenarioChart from './components/RoiScenarioChart';
 import Timeline3D from './components/Timeline3D';
 import KpiDashboard from './components/KpiDashboard';
 import TopicIllustration, { TopicVariant } from './components/TopicIllustration';
-import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, presenterScriptVersion, roiScenarios, segmentation, slideBriefs, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
+import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, presenterScriptVersion, roiScenarios, segmentation, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
 import { DeckState, EditableSlide, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
 import { formatEuro } from './utils/format';
 
@@ -594,7 +594,7 @@ function PresenterView({
   }, [seconds]);
   const nextSlide = activeDeck[Math.min(activeDeck.length - 1, activeIndex + 1)];
   const progress = ((activeIndex + 1) / activeDeck.length) * 100;
-  const activeBrief = slideBriefs[activeSlide.id];
+  const usesCueEditor = script.includes('🟢') || script.includes('🔵');
   const updateScript = (value: string) => {
     setScript(value);
     onChangeSlide({ presenterScript: value });
@@ -646,11 +646,11 @@ function PresenterView({
             <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral script</div>
             <div className="mt-2 text-xs font-bold text-white/48">{saveStatus}</div>
           </div>
-          {activeBrief ? (
+          {usesCueEditor ? (
             <PresenterCueEditor script={script} onChange={updateScript} />
           ) : (
             <textarea
-              className="mt-4 min-h-0 flex-1 resize-none rounded-[1.2rem] border border-white/10 bg-[#0b1110] p-5 text-[1.08rem] font-semibold leading-[1.62] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
+              className="mt-4 min-h-0 flex-1 resize-none rounded-[1.2rem] border border-white/10 bg-[#0b1110] p-5 text-[1.04rem] font-semibold leading-[1.55] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
               value={script}
               onChange={(event) => updateScript(event.target.value)}
               spellCheck={false}
