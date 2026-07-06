@@ -57,9 +57,9 @@ const panels: Record<Variant, {
     illustration: 'strategy'
   },
   timeline: {
-    label: '6-month execution',
+    label: '6-week execution',
     title: 'Clarify, train, pilot, then scale',
-    steps: ['M1 Clarify', 'M2 Train', 'M3 Launch', 'M4 Demo', 'M5 Review', 'M6 Scale'],
+    steps: ['W1 Clarify', 'W2 Train', 'W3 Launch', 'W4 Demo', 'W5 Review', 'W6 Scale'],
     footer: 'A staged plan reduces commercial and adoption risk.',
     illustration: 'roadmap'
   },
