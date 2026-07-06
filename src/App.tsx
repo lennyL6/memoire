@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, ArrowRight, BadgeEuro, BookOpenCheck, BrainCircuit, CalendarDays, CheckCircle2, ClipboardList, Gauge, LineChart, Mail, MessageSquareText, MonitorUp, MousePointer2, NotebookPen, PhoneCall, Presentation, Send, ShieldCheck, Target, UsersRound } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BadgeEuro, BookOpenCheck, BrainCircuit, CalendarDays, CheckCircle2, ClipboardList, Gauge, LineChart, Mail, MessageSquareText, MonitorUp, MousePointer2, NotebookPen, PhoneCall, Presentation, Save, Send, ShieldCheck, SlidersHorizontal, Target, Trash2, Undo2, UsersRound } from 'lucide-react';
 import SlideShell from './components/SlideShell';
 import Navigation from './components/Navigation';
 import PresenterNotes from './components/PresenterNotes';
@@ -19,7 +19,8 @@ import KpiDashboard from './components/KpiDashboard';
 import RiskMatrix from './components/RiskMatrix';
 import FinalQRCode from './components/FinalQRCode';
 import TopicIllustration, { TopicVariant } from './components/TopicIllustration';
-import { annexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, roiScenarios, segmentation, slides, timingPlan, Slide } from './data/presentationContent';
+import { annexes as defaultAnnexes, benchmarkActors, brand, budgetItems, coherenceChecklist, financialBaseline, getPresenterScriptEN, kpis, roiScenarios, segmentation, slides as defaultSlides, timingPlan, Slide } from './data/presentationContent';
+import { DeckState, EditableSlide, loadDeckState, saveDeckState, visibleSlides } from './utils/deckPersistence';
 import { formatEuro } from './utils/format';
 
 export default function App() {
@@ -29,21 +30,27 @@ export default function App() {
   const initialSlide = Number(params.get('slide') ?? 0);
   const initialAnnex = params.get('annex') === '1';
 
-  const [index, setIndex] = useState(Number.isFinite(initialSlide) ? Math.max(0, Math.min(initialSlide, slides.length - 1)) : 0);
+  const [deckState, setDeckState] = useState<DeckState>(() => ({ slides: defaultSlides, annexes: defaultAnnexes }));
+  const [saveStatus, setSaveStatus] = useState('Chargement…');
+  const [editorOpen, setEditorOpen] = useState(false);
+  const slides = useMemo(() => visibleSlides(deckState.slides), [deckState.slides]);
+  const annexes = useMemo(() => visibleSlides(deckState.annexes), [deckState.annexes]);
+  const [index, setIndex] = useState(Number.isFinite(initialSlide) ? Math.max(0, Math.min(initialSlide, defaultSlides.length - 1)) : 0);
   const [annexIndex, setAnnexIndex] = useState(0);
   const [inAnnex, setInAnnex] = useState(initialAnnex);
   const [showNotes, setShowNotes] = useState(params.get('notes') === '1');
   const [showTimer, setShowTimer] = useState(false);
   const [black, setBlack] = useState(false);
   const processedCommandId = useRef<string | null>(null);
+  const deckLoaded = useRef(false);
 
   const activeDeck = inAnnex ? annexes : slides;
   const activeIndex = inAnnex ? annexIndex : index;
-  const activeSlide = activeDeck[activeIndex];
+  const activeSlide = activeDeck[Math.min(activeIndex, Math.max(0, activeDeck.length - 1))] ?? slides[0] ?? annexes[0];
 
   const goNext = () => {
-    if (inAnnex) setAnnexIndex((i) => Math.min(annexes.length - 1, i + 1));
-    else setIndex((i) => Math.min(slides.length - 1, i + 1));
+    if (inAnnex) setAnnexIndex((i) => Math.min(Math.max(0, annexes.length - 1), i + 1));
+    else setIndex((i) => Math.min(Math.max(0, slides.length - 1), i + 1));
   };
   const goPrev = () => {
     if (inAnnex) setAnnexIndex((i) => Math.max(0, i - 1));
@@ -58,12 +65,56 @@ export default function App() {
   const openPresenterView = () => {
     window.open(`${window.location.origin}${window.location.pathname}?presenter=1`, 'fiducial-presenter-view', 'width=1280,height=900');
   };
+  const updateActiveSlide = (patch: Partial<EditableSlide>) => {
+    const id = activeSlide?.id;
+    if (!id) return;
+    const key = inAnnex ? 'annexes' : 'slides';
+    setDeckState((current) => ({
+      ...current,
+      [key]: current[key].map((slide) => slide.id === id ? { ...slide, ...patch } : slide)
+    }));
+  };
+  const deleteActiveSlide = () => {
+    if (!activeSlide) return;
+    updateActiveSlide({ deleted: true });
+    if (inAnnex) setAnnexIndex((i) => Math.max(0, Math.min(i, annexes.length - 2)));
+    else setIndex((i) => Math.max(0, Math.min(i, slides.length - 2)));
+  };
+  const restoreAllSlides = () => setDeckState((current) => ({ ...current, slides: current.slides.map((slide) => ({ ...slide, deleted: false })), annexes: current.annexes.map((slide) => ({ ...slide, deleted: false })) }));
+
   const sendPresenterCommand = (command: 'next' | 'prev' | 'roadmap' | 'annex') => {
     const payload = { type: 'command', command, id: `${Date.now()}-${Math.random().toString(16).slice(2)}` };
     const channel = new BroadcastChannel('fpsg-defense');
     channel.postMessage(payload);
     channel.close();
   };
+
+  useEffect(() => {
+    loadDeckState()
+      .then((saved) => {
+        if (saved) {
+          setDeckState(saved);
+          setSaveStatus(`Dernière sauvegarde chargée${saved.updatedAt ? ` (${new Date(saved.updatedAt).toLocaleString()})` : ''}`);
+        } else {
+          setSaveStatus('Aucune sauvegarde serveur — version initiale');
+        }
+        deckLoaded.current = true;
+      })
+      .catch(() => {
+        deckLoaded.current = true;
+        setSaveStatus('Serveur de sauvegarde indisponible');
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!deckLoaded.current) return;
+    const id = window.setTimeout(() => {
+      saveDeckState(deckState)
+        .then(() => setSaveStatus(`Sauvegardé serveur à ${new Date().toLocaleTimeString()}`))
+        .catch(() => setSaveStatus('Sauvegarde serveur impossible'));
+    }, 700);
+    return () => window.clearTimeout(id);
+  }, [deckState]);
 
   useEffect(() => {
     if (presenterMode) return;
@@ -122,6 +173,7 @@ export default function App() {
       if (e.key.toLowerCase() === 'f') fullscreen();
       if (e.key.toLowerCase() === 'p') openPresenterView();
       if (e.key.toLowerCase() === 'n') setShowNotes((v) => !v);
+      if (e.key.toLowerCase() === 'e') setEditorOpen((v) => !v);
       if (e.key.toLowerCase() === 't') setShowTimer((v) => !v);
       if (e.key.toLowerCase() === 'b') setBlack((v) => !v);
       if (e.key.toLowerCase() === 'a') toggleAnnex();
@@ -182,6 +234,16 @@ export default function App() {
       />
       <PresenterNotes note={activeSlide.note} visible={showNotes} />
       <Timer visible={showTimer} targetMinutes={36} />
+      {editorOpen && activeSlide && (
+        <SlideEditor
+          slide={activeSlide as EditableSlide}
+          saveStatus={saveStatus}
+          onChange={updateActiveSlide}
+          onDelete={deleteActiveSlide}
+          onRestoreAll={restoreAllSlides}
+          onClose={() => setEditorOpen(false)}
+        />
+      )}
       {black && <BlackScreen />}
     </div>
   );
@@ -588,15 +650,16 @@ function AnnexContent({ slide }: { slide: Slide }) {
 
 function BudgetAnnex() {
   const variants: TopicVariant[] = ['portfolio', 'training', 'pilot', 'kpi'];
-  return <div className="grid h-full grid-cols-4 gap-4">{budgetItems.map((item, i) => <div key={item.name} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant={variants[i] ?? 'budget'} size="md" className="mb-4" /><div className="text-xl font-black tracking-[-0.04em]">{item.name}</div><div className="mt-8 text-3xl font-black text-fiducial-deep">{formatEuro(item.min)} - {formatEuro(item.max)}</div></div>)}<div className="deep-card col-span-4 rounded-[1.5rem] p-6 text-4xl font-black tracking-[-0.06em]"><TopicIllustration variant="budget" size="sm" tone="deep" className="mb-4 w-fit" />Total direct budget: {formatEuro(financialBaseline.budgetMin)} - {formatEuro(financialBaseline.budgetMax)}</div></div>;
+  return <div className="grid h-full grid-cols-4 gap-4">{budgetItems.map((item, i) => <div key={item.name} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant={variants[i] ?? 'budget'} size="md" className="mb-4" /><div className="text-xl font-black tracking-[-0.04em]">{item.name}</div><div className="mt-8 text-3xl font-black text-fiducial-deep">{formatEuro(item.min)} - {formatEuro(item.max)}</div></div>)}<div className="deep-card col-span-2 rounded-[1.5rem] p-6 text-3xl font-black tracking-[-0.06em]"><TopicIllustration variant="budget" size="sm" tone="deep" className="mb-4 w-fit" />Direct budget: {formatEuro(financialBaseline.budgetMin)} - {formatEuro(financialBaseline.budgetMax)}</div><div className="glass col-span-2 rounded-[1.5rem] p-6"><TopicIllustration variant="timing" size="sm" className="mb-4 w-fit" /><div className="text-2xl font-black tracking-[-0.05em]">Internal time: {financialBaseline.internalHours}h × {financialBaseline.smicGrossHourly.toString().replace('.', ',')} € = {formatEuro(financialBaseline.internalCost)}</div><div className="mt-3 rounded-2xl bg-fiducial-deep p-4 text-2xl font-black text-white">Complete budget: {formatEuro(financialBaseline.completeBudgetMin)} - {formatEuro(financialBaseline.completeBudgetMax)}</div></div></div>;
 }
 function RoiAnnex() {
-  return <div className="grid h-full grid-cols-3 gap-4">{roiScenarios.map((s) => <div key={s.name} className="glass rounded-[1.5rem] p-6"><TopicIllustration variant={s.name === 'Conservative' ? 'risk' : s.name === 'Realistic' ? 'conversion' : 'revenue'} size="lg" className="mb-5" /><div className="text-2xl font-black">{s.name} {s.growth}</div><div className="mt-6 text-4xl font-black text-fiducial-deep">{formatEuro(s.additionalRevenue)}</div><div className="mt-4 rounded-2xl bg-fiducial-mint p-4 text-sm font-bold">Break-even margin: {s.breakEvenMin}% - {s.breakEvenMax}%</div></div>)}</div>;
+  const fmt = (value: number) => `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+  return <div className="grid h-full grid-cols-3 gap-4">{roiScenarios.map((s) => <div key={s.name} className={s.name === 'Realistic' ? 'deep-card rounded-[1.5rem] p-6' : 'glass rounded-[1.5rem] p-6'}><TopicIllustration variant={s.name === 'Conservative' ? 'risk' : s.name === 'Realistic' ? 'conversion' : 'revenue'} size="lg" tone={s.name === 'Realistic' ? 'deep' : 'light'} className="mb-5" /><div className="text-2xl font-black">{s.name} {s.growth}</div><div className="mt-5 text-sm font-black uppercase tracking-[.14em] opacity-70">Additional margin</div><div className="mt-1 text-4xl font-black tracking-[-0.06em]">{formatEuro(s.additionalMargin)}</div><div className={s.name === 'Realistic' ? 'mt-5 rounded-2xl bg-white/15 p-4 text-xl font-black' : 'mt-5 rounded-2xl bg-fiducial-mint p-4 text-xl font-black text-fiducial-deep'}>ROI: {fmt(s.roiMin)} to {fmt(s.roiMax)}</div></div>)}</div>;
 }
 function QuestionsAnnex() {
   const qs = [
     ['Why these benchmark actors?', 'They cover competitor, pedagogy, key account client and B2B sales perspectives.'],
-    ['Is ROI guaranteed?', 'No. It is a framework based on additional signed revenue and break-even margin logic.'],
+    ['Is ROI guaranteed?', 'No. It is a simulated ROI based on a 35% gross margin assumption, to be replaced by actual offer margins.'],
     ['Why 40 clients?', 'Enough to generate feedback, limited enough to remain manageable.'],
     ['Why not become a tech provider?', 'Fiducial FPSG’s credibility is safety training expertise; technology is a lever.'],
     ['Are the KPIs real results?', 'No. They are recommended monitoring indicators.']
@@ -610,3 +673,61 @@ function DefinitionsAnnex() {
 function OfferDiagnosisCard({ title, text }: { title: string; text: string }) { const variant: TopicVariant = title === 'E-learning' ? 'elearning' : title === 'AR' ? 'ar' : 'vr'; return <div className="deep-card rounded-[1.5rem] p-6"><TopicIllustration variant={variant} size="xl" tone="deep" className="mb-6" /><div className="text-5xl font-black tracking-[-0.06em]">{title}</div><p className="mt-8 text-xl font-semibold leading-relaxed text-white/82">{text}</p></div>; }
 function TimingAnnex() { return <div className="grid h-full grid-cols-3 gap-4">{timingPlan.map((p) => <div key={p.phase} className="glass rounded-[1.5rem] p-5"><TopicIllustration variant="timing" size="sm" className="mb-4" /><div className="text-xs font-black uppercase tracking-[.16em] text-fiducial-deep">Screens {p.screens}</div><div className="mt-3 text-2xl font-black tracking-[-0.04em]">{p.phase}</div><div className="mt-8 rounded-2xl bg-fiducial-deep p-4 text-2xl font-black text-white">{p.duration}</div></div>)}</div>; }
 function SummaryAnnex() { return <div className="grid h-full grid-cols-[1fr_.8fr] gap-5"><div className="deep-card flex flex-col justify-center rounded-[1.8rem] p-8"><TopicIllustration variant="summary" size="xl" tone="deep" className="mb-6 max-w-md" /><div className="text-5xl font-black leading-tight tracking-[-0.06em]">Innovation exists. Commercial scalability must be built.</div><div className="mt-8 text-3xl font-black text-white/75">Segment - Enable - Pilot - Measure - Scale</div></div><div className="glass rounded-[1.5rem] p-5"><TopicIllustration variant="methodology" size="sm" className="mb-4 w-fit" /><div className="kicker">Coherence checklist</div><div className="mt-4 space-y-2 text-sm font-bold leading-tight text-fiducial-anthracite/70">{coherenceChecklist.map((c) => <div key={c}>- {c}</div>)}</div></div></div>; }
+
+function SlideEditor({ slide, saveStatus, onChange, onDelete, onRestoreAll, onClose }: { slide: EditableSlide; saveStatus: string; onChange: (patch: Partial<EditableSlide>) => void; onDelete: () => void; onRestoreAll: () => void; onClose: () => void }) {
+  const style = slide.style ?? {};
+  const updateStyle = (patch: NonNullable<EditableSlide['style']>) => onChange({ style: { ...style, ...patch } });
+  return (
+    <aside className="fixed right-5 top-5 z-50 flex max-h-[calc(100vh-2.5rem)] w-[25rem] flex-col overflow-hidden rounded-[1.5rem] border border-white/70 bg-white/95 shadow-2xl backdrop-blur">
+      <div className="flex items-center justify-between border-b border-fiducial-light p-4">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="text-fiducial-deep" size={20} />
+          <div>
+            <div className="text-sm font-black uppercase tracking-[.14em] text-fiducial-deep">Éditeur de slide</div>
+            <div className="text-xs font-bold text-fiducial-anthracite/55">{saveStatus}</div>
+          </div>
+        </div>
+        <button className="rounded-xl bg-fiducial-light px-3 py-2 text-sm font-black" onClick={onClose}>Fermer</button>
+      </div>
+      <div className="space-y-4 overflow-auto p-4 text-sm">
+        <label className="block font-black">Surtitre
+          <input className="mt-1 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={slide.eyebrow ?? ''} onChange={(e) => onChange({ eyebrow: e.target.value })} />
+        </label>
+        <label className="block font-black">Titre
+          <textarea className="mt-1 h-24 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={slide.title} onChange={(e) => onChange({ title: e.target.value })} />
+        </label>
+        <label className="block font-black">Sous-titre
+          <textarea className="mt-1 h-20 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={slide.subtitle ?? ''} onChange={(e) => onChange({ subtitle: e.target.value })} />
+        </label>
+        <label className="block font-black">Message principal
+          <textarea className="mt-1 h-24 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={slide.message ?? ''} onChange={(e) => onChange({ message: e.target.value })} />
+        </label>
+        <label className="block font-black">Puces (une par ligne)
+          <textarea className="mt-1 h-32 w-full rounded-xl border border-fiducial-light p-2 font-semibold" value={(slide.bullets ?? []).join('\n')} onChange={(e) => onChange({ bullets: e.target.value.split('\n').filter(Boolean) })} />
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block font-black">Police
+            <select className="mt-1 w-full rounded-xl border border-fiducial-light p-2" value={style.fontFamily ?? 'Inter, system-ui, sans-serif'} onChange={(e) => updateStyle({ fontFamily: e.target.value })}>
+              <option value="Inter, system-ui, sans-serif">Inter</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+            </select>
+          </label>
+          <label className="block font-black">Taille titre
+            <input type="number" min="0.7" max="1.4" step="0.05" className="mt-1 w-full rounded-xl border border-fiducial-light p-2" value={style.titleScale ?? 1} onChange={(e) => updateStyle({ titleScale: Number(e.target.value) })} />
+          </label>
+          <label className="block font-black">Taille contenu
+            <input type="number" min="0.75" max="1.35" step="0.05" className="mt-1 w-full rounded-xl border border-fiducial-light p-2" value={style.bodyScale ?? 1} onChange={(e) => updateStyle({ bodyScale: Number(e.target.value) })} />
+          </label>
+        </div>
+        <div className="rounded-2xl bg-fiducial-mint/70 p-3 text-xs font-bold text-fiducial-anthracite/70"><Save size={15} className="mb-1 inline" /> Sauvegarde automatique côté serveur. Sur Vercel, ajoutez Vercel KV (KV_REST_API_URL et KV_REST_API_TOKEN) pour une persistance durable entre redéploiements.</div>
+        <div className="flex gap-2">
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-50 px-3 py-2 font-black text-red-700" onClick={onDelete}><Trash2 size={16} /> Supprimer</button>
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-fiducial-light px-3 py-2 font-black" onClick={onRestoreAll}><Undo2 size={16} /> Restaurer</button>
+        </div>
+      </div>
+    </aside>
+  );
+}
