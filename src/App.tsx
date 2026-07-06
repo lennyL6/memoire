@@ -715,7 +715,8 @@ function PresenterCueEditor({ script, onChange }: { script: string; onChange: (v
               {cue.marker} {cue.label}
             </div>
             <textarea
-              className="mt-2 min-h-[4.2rem] w-full resize-none rounded-xl border border-white/10 bg-[#0b1110]/72 p-3 text-[1.02rem] font-semibold leading-[1.45] text-white/90 outline-none ring-fiducial-accent/40 transition focus:ring-4"
+              className="mt-2 min-h-[4.2rem] w-full resize-none rounded-xl border border-white/10 bg-[#0b1110] p-3 text-[1.02rem] font-semibold leading-[1.45] text-white outline-none ring-fiducial-accent/40 transition placeholder:text-white/35 focus:ring-4"
+              style={{ backgroundColor: '#0b1110', color: '#ffffff' }}
               value={cue.text}
               onChange={(event) => updateCue(index, event.target.value)}
               spellCheck={false}
