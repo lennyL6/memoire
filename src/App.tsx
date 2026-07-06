@@ -601,8 +601,8 @@ function PresenterView({
   };
   return (
     <div className="presenter-view h-screen overflow-hidden bg-[#101716] p-4 text-white">
-      <div className="grid h-full grid-cols-[1.35fr_.85fr] gap-4">
-        <section className="flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.06] p-4 shadow-2xl">
+      <div className="grid h-full gap-4" style={{ gridTemplateColumns: 'minmax(0, 0.62fr) minmax(0, 1.38fr)' }}>
+        <section className="flex min-h-0 min-w-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.06] p-4 shadow-2xl">
           <div className="flex shrink-0 items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <MonitorUp className="text-fiducial-accent" />
@@ -645,7 +645,7 @@ function PresenterView({
           </div>
         </section>
 
-        <section className="flex min-h-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.08] p-5 shadow-2xl">
+        <section className="flex min-h-0 min-w-0 flex-col rounded-[1.5rem] border border-white/10 bg-white/[.08] p-4 shadow-2xl">
           <div className="shrink-0">
             <div className="text-xs font-black uppercase tracking-[.18em] text-fiducial-accent">Oral script</div>
             <div className="mt-2 text-xs font-bold text-white/48">{saveStatus}</div>
@@ -706,16 +706,18 @@ function PresenterCueEditor({ script, onChange }: { script: string; onChange: (v
     onChange(serializePresenterCues(next));
   };
   return (
-    <div className="mt-4 grid min-h-0 flex-1 grid-rows-[repeat(4,minmax(0,1fr))_auto] gap-3 overflow-y-auto pr-1">
+    <div className="mt-2 flex min-h-0 flex-1 flex-col gap-1 overflow-hidden">
       {cues.map((cue, index) => {
         const isBlue = cue.marker === '🔵';
+        const rows = Math.min(5, Math.max(2, Math.ceil(cue.text.length / 58)));
         return (
-          <div key={cue.label} className={isBlue ? 'rounded-[1.2rem] border border-sky-400/35 bg-sky-500/12 p-4' : 'rounded-[1.2rem] border border-fiducial-accent/25 bg-fiducial-accent/12 p-4'}>
-            <div className={isBlue ? 'text-xs font-black uppercase tracking-[.16em] text-sky-300' : 'text-xs font-black uppercase tracking-[.16em] text-fiducial-accent'}>
+          <div key={cue.label} className={isBlue ? 'rounded-[.9rem] border border-sky-400/35 bg-sky-500/12 p-1.5' : 'rounded-[.9rem] border border-fiducial-accent/25 bg-fiducial-accent/12 p-1.5'}>
+            <div className={isBlue ? 'text-[10px] font-black uppercase tracking-[.14em] text-sky-300' : 'text-[10px] font-black uppercase tracking-[.14em] text-fiducial-accent'}>
               {cue.marker} {cue.label}
             </div>
             <textarea
-              className="mt-2 min-h-[4.2rem] w-full resize-none rounded-xl border border-white/10 bg-[#0b1110] p-3 text-[1.02rem] font-semibold leading-[1.45] text-white outline-none ring-fiducial-accent/40 transition placeholder:text-white/35 focus:ring-4"
+              className="mt-0.5 w-full resize-none overflow-hidden rounded-xl border border-white/10 bg-[#0b1110] p-1.5 text-[0.94rem] font-semibold leading-[1.22] text-white outline-none ring-fiducial-accent/40 transition placeholder:text-white/35 focus:ring-4"
+              rows={rows}
               style={{ backgroundColor: '#0b1110', color: '#ffffff' }}
               value={cue.text}
               onChange={(event) => updateCue(index, event.target.value)}
