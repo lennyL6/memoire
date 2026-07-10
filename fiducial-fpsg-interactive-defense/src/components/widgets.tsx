@@ -1,0 +1,5 @@
+import type { ReactNode } from 'react';import { motion } from 'framer-motion';import { QRCodeSVG } from 'qrcode.react';import { BarChart,Bar,XAxis,YAxis,Tooltip,ResponsiveContainer,Cell } from 'recharts';
+export default function Widget(){return null}
+export const Card=({children}:{children:ReactNode})=><motion.div whileHover={{y:-6,scale:1.01}} className="card">{children}</motion.div>;
+export function MoneyBars({data}:{data:[string,number][]}){return <ResponsiveContainer width="100%" height={260}><BarChart data={data.map(([name,value])=>({name,value}))}><XAxis dataKey="name"/><YAxis/><Tooltip formatter={(v)=>`€${Number(v).toLocaleString('en-US')}`}/><Bar dataKey="value" radius={[10,10,0,0]}>{data.map((_,i)=><Cell key={i} fill={i===0?'#007A3D':i===1?'#00A86B':'#8FD9B6'}/>)}</Bar></BarChart></ResponsiveContainer>}
+export function QR(){return <div className="card bg-white inline-block"><QRCodeSVG value="https://www.fiducial-fpsg.fr/" size={128}/><p className="text-xs mt-2">fiducial-fpsg.fr</p></div>}
